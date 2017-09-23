@@ -1,6 +1,6 @@
 import org.newdawn.slick.Input;
 
-public class Player extends Sprite {
+public class Player extends Sprite implements Mobile{
 	
 	
 	public Player(String image_src, Coordinate coordinate) {
@@ -8,7 +8,8 @@ public class Player extends Sprite {
 	}
 	
 	/** Takes input and converts to a move order */
-	public void giveInput(Input input, int delta) {
+	@Override
+	public void update(Input input) {
 		
 		if (input.isKeyPressed(Input.KEY_UP)) {
 			move(-1, 'y');

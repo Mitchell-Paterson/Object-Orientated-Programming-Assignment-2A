@@ -7,8 +7,6 @@ public class World {
 	
 	/** List of sprites in world */
 	private List<Sprite> sprites;
-	/** Player character */
-	private Player player;
 	/** Pathing map (tells us where unblocked coords are) */
 	private static List<Coordinate> pathing;
 	
@@ -18,20 +16,18 @@ public class World {
 		
 		sprites = Loader.loadSprites(level, pathing);
 		
-		// Just assume player is last sprite for now
-		player = (Player) sprites.get(sprites.size() - 1);
-		
 	}
 	
-	public void update(Input input, int delta) {
+	public void update(Input input) {
 		
-			player.giveInput(input, delta);
+		for (Sprite sprite : sprites) {
+			sprite.update(input);
+		}
 			
 	}
 	
 	public void render(Graphics g) {
 		
-		// Loop through all tiles and render
 		for (Sprite sprite : sprites) {
 			sprite.render(g);
 		}

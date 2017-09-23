@@ -55,7 +55,7 @@ public class App extends BasicGame
 			System.exit(0);
 		}
         
-        world.update(input, delta);
+        world.update(input);
     }
 
     /** Render the entire screen, so it reflects the current game state.

@@ -64,12 +64,12 @@ public class Loader {
 		switch (imageName) {
 			
 			case "floor":
-				sprites.add(new Sprite(source, coords));
+				sprites.add(new Tile(source, coords));
 				pathing.add(coords);
 				break;
 			
 			case "wall":
-				sprites.add(new Sprite(source, coords));
+				sprites.add(new Tile(source, coords));
 				break;
 			
 			case "stone":
@@ -78,7 +78,7 @@ public class Loader {
 				break;
 			
 			case "target":
-				sprites.add(new Sprite(source, coords));
+				sprites.add(new Tile(source, coords));
 				pathing.add(coords);
 				break;
 			

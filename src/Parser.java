@@ -1,7 +1,7 @@
 public class Parser {
 	
 	/** Top left coordinate of game map */
-	private static Coordinate offset;
+	private final Coordinate offset;
 	
 	// Constants for parsing world size
 	final int WIDTH = 0;

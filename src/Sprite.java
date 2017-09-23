@@ -1,11 +1,12 @@
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 public class Sprite {
 	
 	/** x & y coordinates */
-	protected Coordinate coordinate;
+	private Coordinate coordinate;
 	/** Sprite image to be displayed */
 	private Image image;
 	
@@ -18,6 +19,10 @@ public class Sprite {
 		}
 		
 		this.coordinate = coordinate;
+		
+	}
+	
+	public void update(Input input) {
 		
 	}
 	
