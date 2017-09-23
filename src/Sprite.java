@@ -54,4 +54,9 @@ public class Sprite {
 	public void render(Graphics g) {
 		image.drawCentered(coordinate.getX(), coordinate.getY());
 	}
+	
+	public Coordinate getLocation() {
+		Coordinate coord = coordinate;
+		return coord;
+	}
 }

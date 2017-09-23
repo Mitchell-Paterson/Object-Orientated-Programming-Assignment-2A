@@ -7,18 +7,17 @@ public class Loader {
 	public final static String SOURCE_FILE = "res/";
 	
 	/**
-	 * Loads the sprites from a given file.
+	 * Loads the sprites from a given level file.
 	 * @param filename
 	 * @return
 	 */
-	public static List<Sprite> loadSprites(String filename,
-										   List<Coordinate> pathing) {
+	public static List<Sprite> loadSprites(String filename) {
 		
 		/**line from .lvl file */
 		String line;
 		
 		// Create new linkedlist of sprites to store
-		List<Sprite> sprites = new ArrayList<Sprite>();
+		List<Sprite> sprites = new LinkedList<Sprite>();
 		
 		// Open file
 		try (BufferedReader br =
@@ -35,7 +34,7 @@ public class Loader {
 				String imageName = parser.image(line);
 				
 				// Decide which image to load
-				addSprite(imageName, sprites, pathing, coords);
+				sprites.add(addSprite(imageName, coords));
 						
 			}
 			
@@ -47,50 +46,31 @@ public class Loader {
 	}
 	
 	
-	/** Adds new pathing & sprite from data */
-	public static void addSprite(String imageName, List<Sprite> sprites,
-								 List<Coordinate> pathing, Coordinate coords) {
-		
-		// Cheeky file path constructor
-		String source;
-		// If these deviated, we would feed them into this method
-		String folder = "res/";
-		String filetype = ".png";
-		// Special case
-		if (imageName.equals("player")) {
-			imageName = "player_left";
-		}
-		source = folder + imageName + filetype;
+	/** Adds new sprite from data */
+	public static Sprite addSprite(String imageName, Coordinate coords) {
 		
 		// Decide which sprite to load
 		switch (imageName) {
 			
 			case "floor":
-				sprites.add(new Floor(coords));
-				pathing.add(coords);
-				break;
+				return new Floor(coords);
 			
 			case "wall":
-				sprites.add(new Wall(coords));
-				break;
+				return new Wall(coords);
 			
 			case "stone":
-				sprites.add(new Sprite(source, coords));
-				pathing.add(coords);
-				break;
+				return new Stone(coords);
 			
 			case "target":
-				sprites.add(new Target(coords));
-				pathing.add(coords);
-				break;
+				return new Target(coords);
 			
-			case "player_left":
-				sprites.add(new Player(coords));
-				break;
+			case "player":
+				return new Player(coords);
 			
 			// If we can't find what sprite to load
 			default:
 				System.out.format("Couldn't find %s.\n", imageName);
+				return null;
 		}
 	}
 	

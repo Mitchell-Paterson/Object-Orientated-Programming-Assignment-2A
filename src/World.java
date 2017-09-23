@@ -6,15 +6,11 @@ import org.newdawn.slick.Input;
 public class World {
 	
 	/** List of sprites in world */
-	private List<Sprite> sprites;
-	/** Pathing map (tells us where unblocked coords are) */
-	private static List<Coordinate> pathing;
+	private static List<Sprite> sprites;
 	
 	public World(String level) {
 		
-		pathing = new ArrayList<Coordinate>();
-		
-		sprites = Loader.loadSprites(level, pathing);
+		sprites = Loader.loadSprites(level);
 		
 	}
 	
@@ -37,10 +33,14 @@ public class World {
 	public static boolean unBlocked(float x, float y) {
 		
 		// Loop through unblocked coords until match
-		for (Coordinate coordinate : pathing) {
-			if (coordinate.getX() == x && coordinate.getY() == y){
-				return true;
+		for (Sprite sprite : sprites) {
+			if (sprite.getLocation().getX() == x
+					&& sprite.getLocation().getY() == y) {
+				if (sprite instanceof Tile) {
+					return Tile.isBlocked((Tile) sprite);
+				}
 			}
+			
 		}
 		
 		// Default to blocked
