@@ -1,6 +1,6 @@
 import org.newdawn.slick.Input;
 
-public class Player extends Sprite implements Mobile{
+public class Player extends Sprite implements Mobile, Pusher{
 	
 	private static final String SOURCE = Loader.SOURCE_FILE + "player_left.png";
 	
@@ -26,5 +26,17 @@ public class Player extends Sprite implements Mobile{
 		}
 		
 	}
-
+	
+	@Override
+	public boolean move(int distance, char direction) {
+		
+		Coordinate temp = calculateMove(distance, direction, super.getLocation());
+		
+		if (World.unBlocked(temp)) {
+			super.setLocation(temp);
+			World.push(distance, direction, super.getLocation());
+			return true;
+		}
+	return false;
+	}
 }

@@ -30,20 +30,30 @@ public class World {
 	}
 	
 	// Returns true if coordinates are an unblocked tile
-	public static boolean unBlocked(float x, float y) {
+	public static boolean unBlocked(Coordinate coord) {
 		
-		// Loop through unblocked coords until match
+		// Loop through sprites checking for tile on coord
 		for (Sprite sprite : sprites) {
-			if (sprite.getLocation().getX() == x
-					&& sprite.getLocation().getY() == y) {
+			if (sprite.getLocation().equals(coord)) {
 				if (sprite instanceof Tile) {
 					return Tile.isBlocked((Tile) sprite);
 				}
 			}
-			
 		}
 		
 		// Default to blocked
 		return false;
+	}
+	
+	public static void push(int distance, char direction, Coordinate location){
+		for (Sprite sprite : sprites) {
+			if (sprite.getLocation().equals(location)) {
+				if (sprite instanceof Block) {
+					if (!sprite.move(distance, direction)){
+						
+					}
+				}
+			}
+		}
 	}
 }

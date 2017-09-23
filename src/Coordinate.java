@@ -28,4 +28,26 @@ public class Coordinate {
 		this.y = y;
 	}
 	
+	public boolean equals(Coordinate other){
+		return (this.x == other.getX() && this.y == other.getY());
+	}
+	
+	public void addY(float y) {
+		this.y += y;
+	}
+	
+	public void addX(float x) {
+		this.x += x;
+	}
+	
+	public Coordinate copy(){
+		Coordinate copy = new Coordinate(this.x, this.y);
+		return copy;
+	}
+	
+	public void set(Coordinate coord){
+		this.x = coord.getX();
+		this.y = coord.getY();
+	}
+	
 }

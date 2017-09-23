@@ -31,24 +31,29 @@ public class Sprite {
 	 * @param distance
 	 * @param direction
 	 */
-	protected void move(int distance, char direction) {
+	public boolean move(int distance, char direction) {
+		
+		Coordinate temp = calculateMove(distance, direction, coordinate.copy());
+		
+		if (World.unBlocked(temp)) {
+			coordinate.set(temp);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public static Coordinate calculateMove(int distance, char direction, Coordinate temp) {
 		
 		float realDist = distance * App.TILE_SIZE;
-		float x = coordinate.getX();
-		float y = coordinate.getY();
 		
 		if (direction == 'y') {
-			if (World.unBlocked(x, y + realDist)) {
-				y += realDist;
-				coordinate.setY(y);
-			}
+			temp.addY(realDist);
 		}
-		if (direction == 'x') {
-			if (World.unBlocked(x + realDist, y)) {
-				x += realDist;
-				coordinate.setX(x);
-			}
+		else if (direction == 'x') {
+			temp.addX(realDist);
 		}
+		return temp;
 	}
 	
 	public void render(Graphics g) {
@@ -56,7 +61,11 @@ public class Sprite {
 	}
 	
 	public Coordinate getLocation() {
-		Coordinate coord = coordinate;
+		Coordinate coord = coordinate.copy();
 		return coord;
+	}
+	
+	public void setLocation(Coordinate location) {
+		coordinate.set(location);
 	}
 }
