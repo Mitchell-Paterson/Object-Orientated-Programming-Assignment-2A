@@ -67,6 +67,12 @@ public class Loader {
 			case "player":
 				return new Player(coords);
 			
+			case "tnt":
+				return new TNT(coords);
+				
+			case "cracked":
+				return new CrackedWall(coords);
+			
 			// If we can't find what sprite to load
 			default:
 				System.out.format("Couldn't find %s.\n", imageName);

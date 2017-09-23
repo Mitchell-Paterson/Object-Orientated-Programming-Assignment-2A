@@ -24,8 +24,11 @@ public class App extends BasicGame
     public static final int SCREEN_HEIGHT = 600;
     /** size of the tiles, in pixels */
     public static final int TILE_SIZE = 32;
+    /** number of levels in game */
+    public static final int LEVELS = 6;
     
     private World world;
+    private int level = 0;
 
     public App()
     {    	
@@ -36,7 +39,14 @@ public class App extends BasicGame
     public void init(GameContainer gc)
     throws SlickException
     {
-    	world = new World("res/levels/0.lvl");
+    	world = new World(Loader.SOURCE_FILE + "levels/" + level + ".lvl");
+    }
+    
+    public void nextLvl() {
+    	level += 1;
+    	if (level < 6) {
+    	world = new World(Loader.SOURCE_FILE + "levels/" + level + ".lvl");
+    	}
     }
 
     /** Update the game state for a frame.
@@ -47,6 +57,9 @@ public class App extends BasicGame
     public void update(GameContainer gc, int delta)
     throws SlickException
     {
+    	if (world.won()) {
+    		nextLvl();
+    	}
         // Get data about the current input (keyboard state).
         Input input = gc.getInput();
 		

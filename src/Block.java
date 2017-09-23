@@ -17,21 +17,25 @@ public class Block extends Sprite {
 		if (World.traversable(temp) && !World.hasBlock(temp)) {
 			
 			super.setLocation(temp);
-			
-			// Will need to catch null error
-			if (onPressurePad) {
-				onPressurePad = false;
-				linkedPad.deactivate();
-				linkedPad = null;
-			}
-			if (World.hasPressurePad(temp)){
-				onPressurePad = true;
-				linkedPad = World.linkPad(temp);
-				linkedPad.activate();
-			}
+			linkPad();
 			return true;
 		}
 	return false;
+	}
+	
+	private void linkPad() {
+		
+		// Will need to catch null error
+		if (onPressurePad) {
+			onPressurePad = false;
+			linkedPad.deactivate();
+			linkedPad = null;
+		}
+		if (World.hasPressurePad(super.getLocation())){
+			onPressurePad = true;
+			linkedPad = World.linkPad(super.getLocation());
+			linkedPad.activate();
+		}
 	}
 
 }

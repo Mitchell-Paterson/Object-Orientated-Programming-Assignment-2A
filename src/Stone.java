@@ -5,7 +5,6 @@ public class Stone extends Block {
 	
 	public Stone(Coordinate coordinate) {
 		super(SOURCE, coordinate);
-		// TODO Auto-generated constructor stub
 	}
 
 }

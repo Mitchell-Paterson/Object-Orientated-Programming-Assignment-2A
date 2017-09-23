@@ -11,6 +11,8 @@ public class World {
 	private static int targetCount;
 	/** Targets needed to win level */
 	private static int targetsNeeded;
+	/** Game won or not */
+	private static boolean gameWon;
 	
 	
 	public World(String level) {
@@ -24,7 +26,9 @@ public class World {
 			if (sprite instanceof Target) {
 				targetsNeeded += 1;
 			}
-		}	
+		}
+		
+		gameWon = false;
 		
 	}
 	
@@ -130,5 +134,13 @@ public class World {
 	
 	public static void updateTargets(int increment) {
 		targetCount += increment;
+		if (targetCount >= targetsNeeded) {
+			gameWon = true;
+		}
+	}
+	
+	public static boolean won() {
+		boolean gameWon = World.gameWon;
+		return gameWon;
 	}
 }
