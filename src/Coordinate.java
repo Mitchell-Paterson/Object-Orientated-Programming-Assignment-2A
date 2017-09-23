@@ -50,4 +50,8 @@ public class Coordinate {
 		this.y = coord.getY();
 	}
 	
+	public void print() {
+		System.out.format("%f, %f\n", this.x, this.y);
+	}
+	
 }

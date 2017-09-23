@@ -132,6 +132,21 @@ public class World {
 		return null;
 	}
 	
+	// Definitely a way to merge linkpad and linkwall
+	public static CrackedWall linkCracked(Coordinate location) {
+		
+		location.print();
+		
+		List<Sprite> spritesAt = getSpritesAt(location);
+		
+		for (Sprite sprite : spritesAt) {
+			if (sprite instanceof CrackedWall) {
+				return (CrackedWall) sprite;
+			}
+		}
+		return null;
+	}
+	
 	public static void updateTargets(int increment) {
 		targetCount += increment;
 		if (targetCount >= targetsNeeded) {
@@ -142,5 +157,14 @@ public class World {
 	public static boolean won() {
 		boolean gameWon = World.gameWon;
 		return gameWon;
+	}
+	
+	public static void killSprite(Sprite dying) {
+		
+		for (Sprite sprite : sprites) {
+			if (sprite == dying) {
+				sprites.remove(sprite);
+			}
+		}
 	}
 }

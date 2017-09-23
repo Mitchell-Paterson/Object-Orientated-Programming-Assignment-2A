@@ -6,6 +6,7 @@ public class CrackedWall extends Tile {
 			
 	public CrackedWall(Coordinate coordinate) {
 		super(SOURCE, coordinate, TRAVERSABLE);
+		coordinate.print();
 	}
 
 }
