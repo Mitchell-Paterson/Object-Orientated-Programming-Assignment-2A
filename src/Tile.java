@@ -1,9 +1,11 @@
 
 public class Tile extends Sprite {
 	
-	public Tile(String image_src, Coordinate coordinate) {
+	private boolean traversable;
+	
+	public Tile(String image_src, Coordinate coordinate, boolean traversable) {
 		super(image_src, coordinate);
+		this.traversable = traversable;
 	}
 	
-	private boolean traversable = false;
 }

@@ -2,9 +2,10 @@ import org.newdawn.slick.Input;
 
 public class Player extends Sprite implements Mobile{
 	
+	private static final String SOURCE = Loader.SOURCE_FILE + "player_left.png";
 	
-	public Player(String image_src, Coordinate coordinate) {
-		super(image_src, coordinate);
+	public Player(Coordinate coordinate) {
+		super(SOURCE, coordinate);
 	}
 	
 	/** Takes input and converts to a move order */

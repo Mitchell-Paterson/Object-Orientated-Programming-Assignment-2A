@@ -4,6 +4,8 @@ import java.util.*;
 
 public class Loader {
 	
+	public final static String SOURCE_FILE = "res/";
+	
 	/**
 	 * Loads the sprites from a given file.
 	 * @param filename
@@ -64,12 +66,12 @@ public class Loader {
 		switch (imageName) {
 			
 			case "floor":
-				sprites.add(new Tile(source, coords));
+				sprites.add(new Floor(coords));
 				pathing.add(coords);
 				break;
 			
 			case "wall":
-				sprites.add(new Tile(source, coords));
+				sprites.add(new Wall(coords));
 				break;
 			
 			case "stone":
@@ -78,12 +80,12 @@ public class Loader {
 				break;
 			
 			case "target":
-				sprites.add(new Tile(source, coords));
+				sprites.add(new Target(coords));
 				pathing.add(coords);
 				break;
 			
 			case "player_left":
-				sprites.add(new Player(source, coords));
+				sprites.add(new Player(coords));
 				break;
 			
 			// If we can't find what sprite to load
