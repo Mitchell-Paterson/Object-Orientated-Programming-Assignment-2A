@@ -23,7 +23,7 @@ public class TNT extends Block {
 		
 		// For now, it's only ever possible for cracked wall to be below
 		Coordinate below  = super.getLocation();
-		below.addY(-1 * App.TILE_SIZE);
+		below.addY(1 * App.TILE_SIZE);
 		
 		if ((linkedCracked = World.linkCracked(below)) != null) {
 			explode();
@@ -33,6 +33,7 @@ public class TNT extends Block {
 	/** Destroys TNT, cracked wall and generates explosion */
 	private void explode() {
 		World.killSprite(linkedCracked);
+		World.birthSprite("explosion", super.getLocation());
 		World.killSprite(this);
 	}
 }

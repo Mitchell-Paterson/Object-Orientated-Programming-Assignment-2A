@@ -8,7 +8,7 @@ public abstract class Tile extends Sprite {
 		this.traversable = traversable;
 	}
 	
-	public static boolean isBlocked(Tile tile) {
+	public static boolean isTraversable(Tile tile) {
 		return tile.traversable;
 	}
 	

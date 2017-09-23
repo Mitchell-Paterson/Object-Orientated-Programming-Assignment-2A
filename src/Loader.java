@@ -73,6 +73,18 @@ public class Loader {
 			case "cracked":
 				return new CrackedWall(coords);
 			
+			case "explosion":
+				return new Explosion(coords);
+				
+			case "ice":
+				return new Ice(coords);
+				
+			case "door":
+				return new Door(coords);
+			
+			case "switch":
+				return new Switch(coords);
+			
 			// If we can't find what sprite to load
 			default:
 				System.out.format("Couldn't find %s.\n", imageName);

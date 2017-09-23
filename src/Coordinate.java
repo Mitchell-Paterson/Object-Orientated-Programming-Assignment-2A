@@ -40,7 +40,8 @@ public class Coordinate {
 		this.x += x;
 	}
 	
-	public Coordinate copy(){
+	@Override
+	public Coordinate clone(){
 		Coordinate copy = new Coordinate(this.x, this.y);
 		return copy;
 	}

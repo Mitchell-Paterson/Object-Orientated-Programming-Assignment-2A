@@ -28,7 +28,7 @@ public class App extends BasicGame
     public static final int LEVELS = 6;
     
     private World world;
-    private int level = 1;
+    private int level = 0;
 
     public App()
     {    	

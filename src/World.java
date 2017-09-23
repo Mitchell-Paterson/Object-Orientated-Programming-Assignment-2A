@@ -13,6 +13,8 @@ public class World {
 	private static int targetsNeeded;
 	/** Game won or not */
 	private static boolean gameWon;
+	/** Sprite to be birthed */
+	private static Sprite foetusSprite;
 	
 	
 	public World(String level) {
@@ -36,7 +38,11 @@ public class World {
 		
 		for (Sprite sprite : sprites) {
 			sprite.update(input);
-		}	
+		}
+		if (foetusSprite != null) {
+			sprites.add(foetusSprite);
+			foetusSprite = null;
+		}
 	}
 	
 	public void render(Graphics g) {
@@ -51,17 +57,24 @@ public class World {
 	// Returns true if coordinates are an unblocked tile
 	public static boolean traversable(Coordinate coord) {
 		
+		// Default to blocked
+		boolean traversable = false;
+		
 		// Loop through sprites checking for tile on coord
 		for (Sprite sprite : sprites) {
 			if (sprite.getLocation().equals(coord)) {
 				if (sprite instanceof Tile) {
-					return Tile.isBlocked((Tile) sprite);
+					// If multiple tiles, it only takes one blocked for false
+					if (!Tile.isTraversable((Tile) sprite)) {
+						return false;
+					} else {
+						traversable = true;
+					}
 				}
 			}
 		}
 		
-		// Default to blocked
-		return false;
+		return traversable;
 	}
 	
 	// Returns true if coordinates are an unblocked tile
@@ -135,8 +148,6 @@ public class World {
 	// Definitely a way to merge linkpad and linkwall
 	public static CrackedWall linkCracked(Coordinate location) {
 		
-		location.print();
-		
 		List<Sprite> spritesAt = getSpritesAt(location);
 		
 		for (Sprite sprite : spritesAt) {
@@ -154,17 +165,16 @@ public class World {
 		}
 	}
 	
-	public static boolean won() {
+	public boolean won() {
 		boolean gameWon = World.gameWon;
 		return gameWon;
 	}
 	
 	public static void killSprite(Sprite dying) {
-		
-		for (Sprite sprite : sprites) {
-			if (sprite == dying) {
-				sprites.remove(sprite);
-			}
-		}
+		sprites.remove(dying);
+	}
+	
+	public static void birthSprite(String imageName, Coordinate location) {
+		foetusSprite = Loader.addSprite(imageName, location);
 	}
 }

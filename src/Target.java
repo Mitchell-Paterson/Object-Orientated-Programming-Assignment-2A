@@ -1,11 +1,10 @@
 
 public class Target extends PressurePad {
 	
-	private final static boolean TRAVERSABLE = true;
 	private final static String SOURCE = Loader.SOURCE_FILE + "target.png";
 
 	public Target(Coordinate coordinate) {
-		super(SOURCE, coordinate, TRAVERSABLE);
+		super(SOURCE, coordinate);
 	}
 
 	@Override

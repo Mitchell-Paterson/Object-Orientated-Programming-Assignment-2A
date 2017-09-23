@@ -33,7 +33,7 @@ public class Sprite {
 	 */
 	public boolean move(int distance, char direction) {
 		
-		Coordinate temp = calculateMove(distance, direction, coordinate.copy());
+		Coordinate temp = calculateMove(distance, direction, coordinate.clone());
 		
 		if (World.traversable(temp)) {
 			coordinate.set(temp);
@@ -61,7 +61,7 @@ public class Sprite {
 	}
 	
 	public Coordinate getLocation() {
-		Coordinate coord = coordinate.copy();
+		Coordinate coord = coordinate.clone();
 		return coord;
 	}
 	
