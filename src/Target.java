@@ -11,12 +11,14 @@ public class Target extends PressurePad {
 	@Override
 	public void activate() {
 		// TODO Auto-generated method stub
+		World.updateTargets(1);
 
 	}
 
 	@Override
 	public void deactivate() {
 		// TODO Auto-generated method stub
+		World.updateTargets(-1);
 
 	}
 

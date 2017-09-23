@@ -35,7 +35,7 @@ public class Sprite {
 		
 		Coordinate temp = calculateMove(distance, direction, coordinate.copy());
 		
-		if (World.unBlocked(temp)) {
+		if (World.traversable(temp)) {
 			coordinate.set(temp);
 			return true;
 		}

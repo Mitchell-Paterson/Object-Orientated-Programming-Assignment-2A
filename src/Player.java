@@ -24,7 +24,6 @@ public class Player extends Sprite implements Mobile, Pusher{
 		if (input.isKeyPressed(Input.KEY_RIGHT)) {
 			move(1, 'x');
 		}
-		
 	}
 	
 	@Override
@@ -32,9 +31,9 @@ public class Player extends Sprite implements Mobile, Pusher{
 		
 		Coordinate temp = calculateMove(distance, direction, super.getLocation());
 		
-		if (World.unBlocked(temp)) {
+		// We check it's okay to walk on and everything there can be pushed away
+		if (World.traversable(temp) && World.push(distance, direction, temp)) {
 			super.setLocation(temp);
-			World.push(distance, direction, super.getLocation());
 			return true;
 		}
 	return false;
