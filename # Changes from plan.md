@@ -33,3 +33,10 @@
 
  - `TNT` inherits `move(etc)`, but then adds `checkExplode()` to it
  - `checkExplode()` and `explode()` still here
+
+ - 'birthSprite' and 'killSprite' still in, just 'killSprite' doesn't use loader class no more.
+
+ - 'Explosion' now uses int for 'EXIST_TIME' in milliseconds
+ - 'Explosion' now has 'dissapate()' instead of 'exist()', and the timer is in the constructor (schedulor more like)
+
+ - PressurePad defined as traversable always
