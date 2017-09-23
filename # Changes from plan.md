@@ -24,3 +24,12 @@
  -`targetCount` and targetsNeeded added to `World` class, with `targetCount` getting `updateTargets(int increment)` called from target `deactivate()` and `activate()`.
 
  -`targetsNeeded` counted at `World` constructor by looping through sprites and counting targets.
+
+ -'CrackedWall' now extends 'Tile' instead of 'Wall' because 'Wall' assigns a image source
+
+ - Added 'won()' to for App to check if the game has won
+ - App 'update(etc)' now checks if game is won
+ - App now has 'nextLvl()' which loads up the next level
+
+ - `TNT` inherits `move(etc)`, but then adds `checkExplode()` to it
+ - `checkExplode()` and `explode()` still here
