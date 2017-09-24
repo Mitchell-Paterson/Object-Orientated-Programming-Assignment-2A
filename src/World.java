@@ -15,13 +15,15 @@ public class World {
 	private static boolean gameWon;
 	/** Sprite to be birthed */
 	private static Sprite foetusSprite;
+	/** Moves done so far */
+	private static int moves;
 	
 	
 	public World(String level) {
 		
 		sprites = Loader.loadSprites(level);
 		
-		// Init target data
+		// Init
 		targetCount = 0;
 		targetsNeeded = 0;
 		for (Sprite sprite : sprites) {
@@ -31,10 +33,18 @@ public class World {
 		}
 		
 		gameWon = false;
+		moves = 0;
 		
 	}
 	
 	public void update(Input input) {
+		
+		if (input.isKeyPressed(Input.KEY_R)) {
+			reset();
+		}
+		if (input.isKeyPressed(Input.KEY_Z)) {
+			undo();
+		}
 		
 		for (Sprite sprite : sprites) {
 			sprite.update(input);
@@ -51,7 +61,7 @@ public class World {
 			sprite.render(g);
 		}
 		// Need to put the location in constant
-		g.drawString("Targets = " + targetCount + "/" + targetsNeeded, 50, 50);
+		g.drawString("Moves: " + moves, 50, 50);
 	}
 	
 	// Returns true if coordinates are an unblocked tile
@@ -65,10 +75,10 @@ public class World {
 			if (sprite.getLocation().equals(coord)) {
 				if (sprite instanceof Tile) {
 					// If multiple tiles, it only takes one blocked for false
-					if (!Tile.isTraversable((Tile) sprite)) {
-						return false;
-					} else {
+					if (((Tile) sprite).isTraversable()) {
 						traversable = true;
+					} else {
+						return false;
 					}
 				}
 			}
@@ -99,7 +109,7 @@ public class World {
 		
 		for (Sprite sprite : spritesAt) {
 			if (sprite instanceof Block) {
-				if (!sprite.move(distance, direction)){
+				if (!((Block)sprite).move(distance, direction)){
 					return false;
 				}
 			}
@@ -176,5 +186,38 @@ public class World {
 	
 	public static void birthSprite(String imageName, Coordinate location) {
 		foetusSprite = Loader.addSprite(imageName, location);
+	}
+	
+	private void reset() {
+		moves = 0;
+		for (Sprite sprite : sprites) {
+			if (sprite instanceof Reversable) {
+				((Reversable) sprite).reset();
+			}
+		}
+	}
+	
+	private void undo() {
+		
+		if (moves > 0) {
+			moves -= 1;
+			for (Sprite sprite : sprites) {
+				if (sprite instanceof Player) {
+					((Reversable) sprite).undo();
+				}
+				else if (sprite instanceof Block) {
+					((Reversable) sprite).undo();
+				}
+			}
+		}
+	}
+	
+	public static void addMove() {
+		moves += 1;
+	}
+	
+	public static int getMoves() {
+		int m = moves;
+		return m;
 	}
 }

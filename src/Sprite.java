@@ -26,36 +26,6 @@ public class Sprite {
 		
 	}
 	
-	/** For moving a sprite x blocks along. It is inherent to the sprite
-	 * class, as multiple sprites will need to move in future
-	 * @param distance
-	 * @param direction
-	 */
-	public boolean move(int distance, char direction) {
-		
-		Coordinate temp = calculateMove(distance, direction, coordinate.clone());
-		
-		if (World.traversable(temp)) {
-			coordinate.set(temp);
-			return true;
-		}
-		
-		return false;
-	}
-	
-	public static Coordinate calculateMove(int distance, char direction, Coordinate temp) {
-		
-		float realDist = distance * App.TILE_SIZE;
-		
-		if (direction == 'y') {
-			temp.addY(realDist);
-		}
-		else if (direction == 'x') {
-			temp.addX(realDist);
-		}
-		return temp;
-	}
-	
 	public void render(Graphics g) {
 		image.drawCentered(coordinate.getX(), coordinate.getY());
 	}

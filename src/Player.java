@@ -1,6 +1,6 @@
 import org.newdawn.slick.Input;
 
-public class Player extends Sprite implements Mobile, Pusher{
+public class Player extends Reversable implements Mobile{
 	
 	private static final String SOURCE = Loader.SOURCE_FILE + "player_left.png";
 	
@@ -12,30 +12,41 @@ public class Player extends Sprite implements Mobile, Pusher{
 	@Override
 	public void update(Input input) {
 		
+		boolean moved = false;
+		Coordinate prevLocation = super.getLocation();
+		
 		if (input.isKeyPressed(Input.KEY_UP)) {
-			move(-1, 'y');
+			moved = move(-1, 'y');
 		}
 		if (input.isKeyPressed(Input.KEY_DOWN)) {
-			move(1, 'y');
+			moved = move(1, 'y');
 		}
 		if (input.isKeyPressed(Input.KEY_LEFT)) {
-			move(-1, 'x');
+			moved = move(-1, 'x');
 		}
 		if (input.isKeyPressed(Input.KEY_RIGHT)) {
-			move(1, 'x');
+			moved = move(1, 'x');
 		}
+		
+		if (moved) {
+			addPrev(prevLocation);
+		}
+		
+		
 	}
 	
 	@Override
 	public boolean move(int distance, char direction) {
 		
-		Coordinate temp = calculateMove(distance, direction, super.getLocation());
+		Coordinate temp = Mobile.calculateMove(distance, direction, super.getLocation());
 		
 		// We check it's okay to walk on and everything there can be pushed away
 		if (World.traversable(temp) && World.push(distance, direction, temp)) {
+			World.addMove();
 			super.setLocation(temp);
 			return true;
 		}
 	return false;
 	}
+	
 }
