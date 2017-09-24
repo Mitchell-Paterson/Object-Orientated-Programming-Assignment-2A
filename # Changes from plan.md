@@ -40,3 +40,13 @@
  - 'Explosion' now has 'dissapate()' instead of 'exist()', and the timer is in the constructor (schedulor more like)
 
  - PressurePad defined as traversable always
+
+ - Moves are now remembered in Player and Block classes
+
+ - Reversable is now inherited from sprite, from which Player and Block inherit
+ - World has 'undo()' and 'reset()', which calls undo and reset in Player and Block
+ - Block has extensions to undo and reset, as it has a moveIndex that checks it's undoing the right move order
+
+ - Ice just overrides move instead of using slide
+
+
