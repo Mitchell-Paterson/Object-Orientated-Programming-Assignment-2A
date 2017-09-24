@@ -32,7 +32,6 @@ public class Player extends Reversable implements Mobile{
 			addPrev(prevLocation);
 		}
 		
-		
 	}
 	
 	@Override
@@ -42,8 +41,9 @@ public class Player extends Reversable implements Mobile{
 		
 		// We check it's okay to walk on and everything there can be pushed away
 		if (World.traversable(temp) && World.push(distance, direction, temp)) {
-			World.addMove();
 			super.setLocation(temp);
+			World.addMove();
+			World.deadly(temp);
 			return true;
 		}
 	return false;

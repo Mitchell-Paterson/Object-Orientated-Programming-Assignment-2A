@@ -9,13 +9,13 @@ public class Switch extends PressurePad {
 
 	@Override
 	public void activate() {
-		// TODO Auto-generated method stub
+		World.toggleDoors();
 
 	}
 
 	@Override
 	public void deactivate() {
-		// TODO Auto-generated method stub
+		World.toggleDoors();
 
 	}
 

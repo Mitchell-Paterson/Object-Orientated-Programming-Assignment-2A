@@ -84,6 +84,15 @@ public class Loader {
 			
 			case "switch":
 				return new Switch(coords);
+				
+			case "rogue":
+				return new Rogue(coords);
+			
+			case "skeleton":
+				return new Skeleton(coords);
+			
+			case "mage":
+				return new Mage(coords);
 			
 			// If we can't find what sprite to load
 			default:

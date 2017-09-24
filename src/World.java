@@ -18,7 +18,6 @@ public class World {
 	/** Moves done so far */
 	private static int moves;
 	
-	
 	public World(String level) {
 		
 		sprites = Loader.loadSprites(level);
@@ -62,6 +61,7 @@ public class World {
 		}
 		// Need to put the location in constant
 		g.drawString("Moves: " + moves, 50, 50);
+		g.drawString("Targets: " + targetCount + "/" + targetsNeeded, 50, 70);
 	}
 	
 	// Returns true if coordinates are an unblocked tile
@@ -188,8 +188,9 @@ public class World {
 		foetusSprite = Loader.addSprite(imageName, location);
 	}
 	
-	private void reset() {
+	private static void reset() {
 		moves = 0;
+		targetCount = 0;
 		for (Sprite sprite : sprites) {
 			if (sprite instanceof Reversable) {
 				((Reversable) sprite).reset();
@@ -214,10 +215,47 @@ public class World {
 	
 	public static void addMove() {
 		moves += 1;
+		
+		for (Sprite sprite : sprites) {
+			if (sprite instanceof Rogue) {
+				((Rogue) sprite).patrol();
+			}
+		}
 	}
 	
 	public static int getMoves() {
 		int m = moves;
 		return m;
+	}
+	
+	public static void toggleDoors() {
+		
+		for (Sprite sprite : sprites) {
+			if (sprite instanceof Door) {
+				((Door) sprite).toggle();
+			}
+		}
+	}
+	
+	public static void deadly(Coordinate location) {
+		
+		List<Sprite> spritesAt = getSpritesAt(location);
+		
+		for (Sprite sprite : spritesAt) {
+			if (sprite instanceof Enemy) {
+				reset();
+			}
+		}
+	}
+	
+	public static void playerKill(Coordinate location) {
+		
+		List<Sprite> spritesAt = getSpritesAt(location);
+		
+		for (Sprite sprite : spritesAt) {
+			if (sprite instanceof Player) {
+				reset();
+			}
+		}
 	}
 }

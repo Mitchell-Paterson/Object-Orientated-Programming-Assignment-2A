@@ -50,7 +50,7 @@ public class Block extends Reversable implements Mobile {
 	}
 	
 	
-	private void linkPad() {
+	public void linkPad() {
 		
 		// Will need to catch null error
 		if (onPressurePad) {

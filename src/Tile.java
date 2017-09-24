@@ -13,4 +13,8 @@ public abstract class Tile extends Sprite {
 		return traversable;
 	}
 	
+	public void toggleTraversable() {
+		traversable = !traversable;
+	}
+	
 }
