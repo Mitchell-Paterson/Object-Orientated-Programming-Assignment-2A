@@ -27,8 +27,8 @@ public class App extends BasicGame
     /** number of levels in game */
     public static final int LEVELS = 6;
     
-    private World world;
-    private int level = 3;
+    private static World world;
+    private static int level = 3;
 
     public App()
     {    	
@@ -42,11 +42,15 @@ public class App extends BasicGame
     	world = new World(Loader.SOURCE_FILE + "levels/" + level + ".lvl");
     }
     
-    public void nextLvl() {
+    private void nextLvl() {
     	level += 1;
     	if (level < 6) {
     	world = new World(Loader.SOURCE_FILE + "levels/" + level + ".lvl");
     	}
+    }
+    
+    public static void resetLvl() {
+    	world = new World(Loader.SOURCE_FILE + "levels/" + level + ".lvl");
     }
 
     /** Update the game state for a frame.
@@ -67,6 +71,9 @@ public class App extends BasicGame
         if (input.isKeyDown(Input.KEY_ESCAPE)) {
 			System.exit(0);
 		}
+        if (input.isKeyDown(Input.KEY_R)) {
+        	resetLvl();
+        }
         
         world.update(input);
     }
@@ -89,7 +96,7 @@ public class App extends BasicGame
     {
         AppGameContainer app = new AppGameContainer(new App());
         // setShowFPS(true), to show frames-per-second.
-        app.setShowFPS(false);
+        app.setShowFPS(true);
         app.setDisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT, false);
         app.start();
     }

@@ -38,9 +38,6 @@ public class World {
 	
 	public void update(Input input) {
 		
-		if (input.isKeyPressed(Input.KEY_R)) {
-			reset();
-		}
 		if (input.isKeyPressed(Input.KEY_Z)) {
 			undo();
 		}
@@ -92,6 +89,7 @@ public class World {
 		
 		// Loop through sprites checking for tile on coord
 		for (Sprite sprite : sprites) {
+			// TODO Reprogram with getSpritesAt
 			if (sprite.getLocation().equals(coord)) {
 				if (sprite instanceof Block) {
 					return true;
@@ -151,11 +149,12 @@ public class World {
 				return (PressurePad) sprite;
 			}
 		}
-		System.out.println("linkPad() failed to find pad.");
+		// TODO Make actual error message
+		System.out.println("Failed to find pad.");
 		return null;
 	}
 	
-	// Definitely a way to merge linkpad and linkwall
+	// TODO Definitely a way to merge linkpad and linkwall
 	public static CrackedWall linkCracked(Coordinate location) {
 		
 		List<Sprite> spritesAt = getSpritesAt(location);
@@ -189,13 +188,7 @@ public class World {
 	}
 	
 	private static void reset() {
-		moves = 0;
-		targetCount = 0;
-		for (Sprite sprite : sprites) {
-			if (sprite instanceof Reversable) {
-				((Reversable) sprite).reset();
-			}
-		}
+		App.resetLvl();
 	}
 	
 	private void undo() {
@@ -214,11 +207,18 @@ public class World {
 	}
 	
 	public static void addMove() {
+		
 		moves += 1;
 		
+		// TODO Rogue and mage need to move whether player succeeds or not
 		for (Sprite sprite : sprites) {
 			if (sprite instanceof Rogue) {
-				((Rogue) sprite).patrol();
+				// Tells rogue to patrol along x axis
+				// TODO Remove magic character
+				((Rogue) sprite).patrol('x');
+			} else if (sprite instanceof Mage) {
+				// Tells mage to track player
+				((Mage) sprite).trackingMove();
 			}
 		}
 	}
@@ -257,5 +257,17 @@ public class World {
 				reset();
 			}
 		}
+	}
+	
+	public static Coordinate getPlayerLocation() {
+		
+		for (Sprite sprite : sprites) {
+			if (sprite instanceof Player) {
+				return sprite.getLocation();
+			}
+		}
+		// TODO Make this into a proper error.
+		System.out.println("Failed to find player location.");
+		return null;
 	}
 }

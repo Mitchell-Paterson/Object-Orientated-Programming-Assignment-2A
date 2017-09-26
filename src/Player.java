@@ -49,4 +49,10 @@ public class Player extends Reversable implements Mobile{
 	return false;
 	}
 	
+	@Override
+	public void undo() {
+		super.undo();
+		World.deadly(this.getLocation());
+	}
+	
 }

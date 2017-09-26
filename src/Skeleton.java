@@ -7,11 +7,13 @@ public class Skeleton extends Enemy {
 	private final static String SOURCE = Loader.SOURCE_FILE + "skull.png";
 	/** Delay between moves in milliseconds */
 	private final static int WANDER_DELAY = 1000;
-	/** Current direction, always starts going up */
-	private boolean goingUp = true;
+	/** Starting direction, always starts going up */
+	private final static int INITIAL_AXIS_DIRECTION = -1;
+	/** Axis to patrol along */
+	private final static char PATROL_AXIS = 'y';
 	
 	public Skeleton(Coordinate coordinate) {
-		super(SOURCE, coordinate);
+		super(SOURCE, coordinate, INITIAL_AXIS_DIRECTION);
 		wander();
 	}
 	
@@ -22,39 +24,9 @@ public class Skeleton extends Enemy {
 	    executorService.scheduleAtFixedRate(new Runnable() {
 	        @Override
 	        public void run() {
-	            wanderMove();
+	        	// Move along y axis
+	        	patrol(PATROL_AXIS);
 	        }
 	    }, WANDER_DELAY, WANDER_DELAY, TimeUnit.MILLISECONDS);
 	}
-	
-	@Override
-	public boolean move(int distance, char direction) {
-		
-		Coordinate temp = Mobile.calculateMove(distance, direction, super.getLocation());
-		
-		// We check it's okay to walk on and everything there can be pushed away
-		if (World.traversable(temp)) {
-			super.setLocation(temp);
-			World.playerKill(temp);
-			return true;
-		}
-	return false;
-	}
-	
-	/** Decides which way to move and does so */
-	private void wanderMove() {
-		// TODO Make this more elegant and remove magic numbers
-		if (goingUp) {
-			if (!move(-1, 'y')) {
-				goingUp = false;
-				move(1, 'y');
-			}
-		} else {
-			if (!move(1, 'y')) {
-				goingUp = true;
-				move(-1, 'y');
-			}
-		}
-	}
-
 }

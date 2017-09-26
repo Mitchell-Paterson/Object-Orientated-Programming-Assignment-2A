@@ -15,7 +15,7 @@ public class Ice extends Block {
 	@Override
 	public boolean move(int distance, char direction) {
 		if (super.move(distance, direction)) {
-			// TODO: Now I'm in JavaSE-1.8, I can clean this mess up
+			// TODO Clean this schedulor up somehow
 			final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 		    executorService.schedule(new Runnable() {
 		        @Override
@@ -54,7 +54,7 @@ public class Ice extends Block {
 			
 			super.setLocation(temp);
 			
-			linkPad();
+			updatePad();
 			
 			return true;
 		}

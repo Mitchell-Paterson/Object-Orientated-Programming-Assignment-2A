@@ -1,17 +1,35 @@
+import java.lang.Math;
 
 public class Mage extends Enemy {
 	
 	private final static String SOURCE = Loader.SOURCE_FILE + "mage.png";
+	/** Unused for Mage */
+	private final static int INITIAL_AXIS_DIRECTION = -1;
 	
 	public Mage(Coordinate coordinate) {
-		super(SOURCE, coordinate);
-		// TODO Auto-generated constructor stub
+		super(SOURCE, coordinate, INITIAL_AXIS_DIRECTION);
 	}
-
-	@Override
-	public boolean move(int distance, char direction) {
-		// TODO Auto-generated method stub
-		return false;
+	
+	public void trackingMove() {
+		
+		Coordinate playerLoc = World.getPlayerLocation();
+		Coordinate mageLoc = this.getLocation();
+		
+		float distX = Math.abs(playerLoc.getX() - mageLoc.getX());
+		float distY = Math.abs(playerLoc.getY() - mageLoc.getY());
+		
+		int sign = 1;
+		if (distX < 0) {
+			sign = -1;
+		}
+		
+		if (distX > distY) {
+			if(move(sign, 'x')) {
+				// If we get here, we've moved in x direction
+				return;
+			}
+		}
+		// If we get here, we didn't want to move in x direction
+		move(sign, 'y');
 	}
-
 }

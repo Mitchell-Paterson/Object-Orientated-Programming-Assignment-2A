@@ -25,7 +25,7 @@ public class Block extends Reversable implements Mobile {
 			
 			super.setLocation(temp);
 			
-			linkPad();
+			updatePad();
 			
 			return true;
 		}
@@ -45,12 +45,13 @@ public class Block extends Reversable implements Mobile {
 			if (moveIndex.getLast() == World.getMoves()) {
 				moveIndex.removeLast();
 				super.undo();
+				updatePad();
 			}
 		}
 	}
 	
 	
-	public void linkPad() {
+	public void updatePad() {
 		
 		// Will need to catch null error
 		if (onPressurePad) {
