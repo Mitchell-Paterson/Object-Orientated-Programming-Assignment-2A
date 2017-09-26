@@ -25,28 +25,10 @@
 
  -`targetsNeeded` counted at `World` constructor by looping through sprites and counting targets.
 
- -'CrackedWall' now extends 'Tile' instead of 'Wall' because 'Wall' assigns a image source
+ - Enemy class now has override for move and a patrol method, which is used Rogue and Skeleton, but not Mage.
 
- - Added 'won()' to for App to check if the game has won
- - App 'update(etc)' now checks if game is won
- - App now has 'nextLvl()' which loads up the next level
+ - Reset now happens in the App class, and just reloads the whole level, to ensure cleanest possible reset
 
- - `TNT` inherits `move(etc)`, but then adds `checkExplode()` to it
- - `checkExplode()` and `explode()` still here
-
- - 'birthSprite' and 'killSprite' still in, just 'killSprite' doesn't use loader class no more.
-
- - 'Explosion' now uses int for 'EXIST_TIME' in milliseconds
- - 'Explosion' now has 'dissapate()' instead of 'exist()', and the timer is in the constructor (schedulor more like)
-
- - PressurePad defined as traversable always
-
- - Moves are now remembered in Player and Block classes
-
- - Reversable is now inherited from sprite, from which Player and Block inherit
- - World has 'undo()' and 'reset()', which calls undo and reset in Player and Block
- - Block has extensions to undo and reset, as it has a moveIndex that checks it's undoing the right move order
-
- - Ice just overrides move instead of using slide
-
-
+ - Rogue has override of move, so it can push blocks as well
+ - Skeleton `void wander()` is exactly as planned
+ - Mage `void trackingMove()` is pretty much as planned
