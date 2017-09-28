@@ -85,6 +85,27 @@ public class World {
 	}
 	
 	// Returns true if coordinates are an unblocked tile
+	public static boolean isTraversable(List<Sprite> spritesAt) {
+		
+		// Default to blocked
+		boolean traversable = false;
+		
+		// Loop through sprites checking for tile on coord
+		for (Sprite sprite : spritesAt) {
+			if (sprite instanceof Tile) {
+				// If multiple tiles, it only takes one blocked for false
+				if (((Tile) sprite).isTraversable()) {
+					traversable = true;
+				} else {
+					return false;
+				}
+			}
+		}
+		
+		return traversable;
+	}
+	
+	// Returns true if coordinates are an unblocked tile
 	public static boolean hasBlock(Coordinate coord) {
 		
 		// Loop through sprites checking for tile on coord
@@ -101,30 +122,36 @@ public class World {
 		return false;
 	}
 	
-	public static boolean push(int distance, char direction, Coordinate location) {
+	// Returns true if coordinates are an unblocked tile
+	public static boolean gotBlock(List<Sprite> spritesAt) {
 		
-		List<Sprite> spritesAt = getSpritesAt(location);
-		
+		// Loop through sprites checking for tile on coord
 		for (Sprite sprite : spritesAt) {
 			if (sprite instanceof Block) {
-				if (!((Block)sprite).move(distance, direction)){
+				return true;
+			}
+		}
+		
+		// Default to no blocks
+		return false;
+	}
+	
+	public static boolean push(int distance, char direction, Coordinate location) {
+		
+		List<Sprite> spritesAtOld = getSpritesAt(location);
+		
+		Coordinate newLoc = Mobile.calculateMove(distance, direction, location.clone());
+		
+		List<Sprite> spritesAtNew = getSpritesAt(newLoc);
+		
+		for (Sprite sprite : spritesAtOld) {
+			if (sprite instanceof Block) {
+				if (!((Block)sprite).move(newLoc, spritesAtNew, moves)){
 					return false;
 				}
 			}
 		}
 		return true;
-	}
-	
-	public static boolean hasPressurePad(Coordinate location){
-		
-		List<Sprite> spritesAt = getSpritesAt(location);
-		
-		for (Sprite sprite : spritesAt) {
-			if (sprite instanceof PressurePad) {
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	private static List<Sprite> getSpritesAt(Coordinate location) {
@@ -140,17 +167,13 @@ public class World {
 		return SpritesAt;
 	}
 	
-	public static PressurePad linkPad(Coordinate location) {
-		
-		List<Sprite> spritesAt = getSpritesAt(location);
+	public static PressurePad linkToPad(List<Sprite> spritesAt) {
 		
 		for (Sprite sprite : spritesAt) {
 			if (sprite instanceof PressurePad) {
 				return (PressurePad) sprite;
 			}
 		}
-		// TODO Make actual error message
-		System.out.println("Failed to find pad.");
 		return null;
 	}
 	
@@ -197,10 +220,14 @@ public class World {
 			moves -= 1;
 			for (Sprite sprite : sprites) {
 				if (sprite instanceof Player) {
-					((Reversable) sprite).undo();
+					((Player) sprite).undo();
 				}
 				else if (sprite instanceof Block) {
-					((Reversable) sprite).undo();
+					Coordinate newLoc = ((Block) sprite).undo(moves);
+					if (newLoc != null) {
+						List<Sprite> spritesAt = getSpritesAt(newLoc);
+						((Block) sprite).updatePad(spritesAt);
+					}
 				}
 			}
 		}

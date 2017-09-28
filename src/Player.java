@@ -1,3 +1,5 @@
+import java.util.List;
+
 import org.newdawn.slick.Input;
 
 public class Player extends Reversable implements Mobile{
@@ -34,13 +36,27 @@ public class Player extends Reversable implements Mobile{
 		
 	}
 	
+	public boolean move(Coordinate newLoc, List<Sprite> spritesAtNew, int moves) {
+		
+		// Check we can move there before moving
+		if (World.isTraversable(spritesAtNew) && !World.gotBlock(spritesAtNew)) {
+			
+			addPrev(super.getLocation());
+			
+			super.setLocation(newLoc);
+			
+			return true;
+		}
+	return false;
+	}
+	
 	@Override
 	public boolean move(int distance, char direction) {
 		
 		Coordinate temp = Mobile.calculateMove(distance, direction, super.getLocation());
 		
 		// We check it's okay to walk on and everything there can be pushed away
-		if (World.traversable(temp) && World.push(distance, direction, temp)) {
+		if (World.traversable(temp) && World.push(distance, direction, temp.clone())) {
 			super.setLocation(temp);
 			World.addMove();
 			World.deadly(temp);
@@ -50,9 +66,13 @@ public class Player extends Reversable implements Mobile{
 	}
 	
 	@Override
-	public void undo() {
-		super.undo();
-		World.deadly(this.getLocation());
+	public Coordinate undo() {
+		Coordinate newLoc = super.undo();
+		if (newLoc != null) {
+			World.deadly(newLoc);
+			return newLoc;
+		}
+		return null;
 	}
 	
 }

@@ -16,10 +16,13 @@ public class Reversable extends Sprite {
 		prevLocations.clear();
 	}
 	
-	public void undo() {
+	public Coordinate undo() {
 		if (prevLocations.size() > 0) {
-			super.setLocation(prevLocations.pollLast());
+			Coordinate prevLoc = prevLocations.pollLast();
+			super.setLocation(prevLoc);
+			return prevLoc;
 		}
+		return null;
 	}
 	
 	public void addPrev(Coordinate previousLocation) {

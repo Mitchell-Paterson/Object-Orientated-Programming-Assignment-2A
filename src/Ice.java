@@ -54,7 +54,7 @@ public class Ice extends Block {
 			
 			super.setLocation(temp);
 			
-			updatePad();
+			// updatePad();
 			
 			return true;
 		}

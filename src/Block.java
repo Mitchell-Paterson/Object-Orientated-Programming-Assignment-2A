@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.List;
 
 
 public class Block extends Reversable implements Mobile {
@@ -12,20 +13,18 @@ public class Block extends Reversable implements Mobile {
 		moveIndex = new LinkedList<Integer>();
 	}
 	
-	@Override
-	public boolean move(int distance, char direction) {
-		
-		Coordinate temp = Mobile.calculateMove(distance, direction, super.getLocation());
+	// Overrides, but I'm messing with things
+	public boolean move(Coordinate newLoc, List<Sprite> spritesAtNew, int moves) {
 		
 		// Check we can move there before moving
-		if (World.traversable(temp) && !World.hasBlock(temp)) {
+		if (World.isTraversable(spritesAtNew) && !World.gotBlock(spritesAtNew)) {
 			
-			addPrev(this.getLocation());
-			moveIndex.add(World.getMoves());
+			addPrev(super.getLocation());
+			moveIndex.add(moves);
 			
-			super.setLocation(temp);
+			super.setLocation(newLoc);
 			
-			updatePad();
+			updatePad(spritesAtNew);
 			
 			return true;
 		}
@@ -38,20 +37,21 @@ public class Block extends Reversable implements Mobile {
 		moveIndex.clear();
 	}
 	
-	@Override
-	public void undo() {
+	// TODO Not overriding, instead overloading, not sure if safe
+	public Coordinate undo(int moves) {
 		
 		if (moveIndex.size() > 0) {
-			if (moveIndex.getLast() == World.getMoves()) {
+			if (moveIndex.getLast() == moves) {
 				moveIndex.removeLast();
-				super.undo();
-				updatePad();
+				return super.undo();
+				// updatePad();
 			}
 		}
+		return null;
 	}
 	
 	
-	public void updatePad() {
+	public void updatePad(List<Sprite> spritesAtNew) {
 		
 		// Will need to catch null error
 		if (onPressurePad) {
@@ -59,11 +59,30 @@ public class Block extends Reversable implements Mobile {
 			linkedPad.deactivate();
 			linkedPad = null;
 		}
-		if (World.hasPressurePad(super.getLocation())){
+		if ((linkedPad = World.linkToPad(spritesAtNew)) != null){
 			onPressurePad = true;
-			linkedPad = World.linkPad(super.getLocation());
 			linkedPad.activate();
 		}
+	}
+
+	@Override
+	public boolean move(int distance, char direction) {
+		
+			Coordinate temp = Mobile.calculateMove(distance, direction, super.getLocation());
+			
+			// Check we can move there before moving
+			if (World.traversable(temp) && !World.hasBlock(temp)) {
+				
+				addPrev(this.getLocation());
+				moveIndex.add(World.getMoves());
+				
+				super.setLocation(temp);
+				
+				// updatePad();
+				
+				return true;
+			}
+		return false;
 	}
 
 }
