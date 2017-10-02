@@ -6,13 +6,12 @@ public class Mage extends Enemy {
 	/** Unused for Mage */
 	private final static int INITIAL_AXIS_DIRECTION = -1;
 	
-	public Mage(Coordinate coordinate) {
-		super(SOURCE, coordinate, INITIAL_AXIS_DIRECTION);
+	public Mage(Coordinate coordinate, World world) {
+		super(SOURCE, coordinate, INITIAL_AXIS_DIRECTION, world);
 	}
 	
-	public void trackingMove() {
+	public void trackingMove(Coordinate playerLoc) {
 		
-		Coordinate playerLoc = World.getPlayerLocation();
 		Coordinate mageLoc = this.getLocation();
 		
 		float distX = Math.abs(playerLoc.getX() - mageLoc.getX());

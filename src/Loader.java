@@ -59,25 +59,25 @@ public class Loader {
 				return new Wall(coords);
 			
 			case "stone":
-				return new Stone(coords);
+				return new Stone(coords, world);
 			
 			case "target":
-				return new Target(coords);
+				return new Target(coords, world);
 			
 			case "player":
 				return new Player(coords, world);
 			
 			case "tnt":
-				return new TNT(coords);
+				return new TNT(coords, world);
 				
 			case "cracked":
 				return new CrackedWall(coords);
 			
 			case "explosion":
-				return new Explosion(coords);
+				return new Explosion(coords, world);
 				
 			case "ice":
-				return new Ice(coords);
+				return new Ice(coords, world);
 				
 			case "door":
 				return new Door(coords);
@@ -89,10 +89,10 @@ public class Loader {
 				return new Rogue(coords, world);
 			
 			case "skeleton":
-				return new Skeleton(coords);
+				return new Skeleton(coords, world);
 			
 			case "mage":
-				return new Mage(coords);
+				return new Mage(coords, world);
 			
 			// If we can't find what sprite to load
 			default:

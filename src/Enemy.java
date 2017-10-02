@@ -1,10 +1,10 @@
 
-public abstract class Enemy extends Sprite implements Mobile {
+public abstract class Enemy extends Movable implements Mobile {
 	
 	private int step;
 	
-	public Enemy(String image_src, Coordinate coordinate, int initialStep) {
-		super(image_src, coordinate);
+	public Enemy(String image_src, Coordinate coordinate, int initialStep, World world) {
+		super(image_src, coordinate, world);
 		step = initialStep;
 	}
 	
@@ -14,9 +14,9 @@ public abstract class Enemy extends Sprite implements Mobile {
 		Coordinate temp = Mobile.calculateMove(distance, direction, this.getLocation());
 		
 		// We check it's okay to walk on first
-		if (World.traversable(temp) && !World.hasBlock(temp)) {
+		if (checkWorld().traversable(temp) && checkWorld().hasBlock(temp)) {
 			super.setLocation(temp);
-			World.playerKill(temp);
+			checkWorld().playerKill(temp);
 			return true;
 		}
 		

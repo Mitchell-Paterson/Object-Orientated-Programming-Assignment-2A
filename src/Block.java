@@ -8,8 +8,8 @@ public class Block extends Reversable implements Mobile {
 	private PressurePad linkedPad = null;
 	private LinkedList<Integer> moveIndex;
 	
-	public Block(String image_src, Coordinate coordinate) {
-		super(image_src, coordinate);
+	public Block(String image_src, Coordinate coordinate, World world) {
+		super(image_src, coordinate, world);
 		moveIndex = new LinkedList<Integer>();
 	}
 	
@@ -45,7 +45,6 @@ public class Block extends Reversable implements Mobile {
 			if (moveIndex.getLast() == moves) {
 				moveIndex.removeLast();
 				return super.undo();
-				// updatePad();
 			}
 		}
 		return null;
@@ -60,7 +59,7 @@ public class Block extends Reversable implements Mobile {
 			linkedPad.deactivate();
 			linkedPad = null;
 		}
-		if ((linkedPad = World.linkToPad(spritesAtNew)) != null){
+		if ((linkedPad = checkWorld().linkToPad(spritesAtNew)) != null){
 			onPressurePad = true;
 			linkedPad.activate();
 		}
@@ -72,10 +71,10 @@ public class Block extends Reversable implements Mobile {
 			Coordinate temp = Mobile.calculateMove(distance, direction, super.getLocation());
 			
 			// Check we can move there before moving
-			if (World.traversable(temp) && !World.hasBlock(temp)) {
+			if (checkWorld().traversable(temp) && !checkWorld().hasBlock(temp)) {
 				
 				addPrev(this.getLocation());
-				moveIndex.add(World.getMoves());
+				moveIndex.add(checkWorld().getMoves());
 				
 				super.setLocation(temp);
 				

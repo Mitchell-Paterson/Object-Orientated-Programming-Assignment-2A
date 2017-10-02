@@ -8,8 +8,8 @@ public class Ice extends Block {
 	/** Delay between movements in milliseconds */
 	private final static int SLIDE_DELAY = 250;
 	
-	public Ice(Coordinate coordinate) {
-		super(SOURCE, coordinate);
+	public Ice(Coordinate coordinate, World world) {
+		super(SOURCE, coordinate, world);
 	}
 	
 	@Override
@@ -50,7 +50,7 @@ public class Ice extends Block {
 		Coordinate temp = Mobile.calculateMove(distance, direction, super.getLocation());
 		
 		// Check we can move there before moving
-		if (World.traversable(temp) && !World.hasBlock(temp)) {
+		if (checkWorld().traversable(temp) && !checkWorld().hasBlock(temp)) {
 			
 			super.setLocation(temp);
 			

@@ -12,8 +12,8 @@ public class Skeleton extends Enemy {
 	/** Axis to patrol along */
 	private final static char PATROL_AXIS = 'y';
 	
-	public Skeleton(Coordinate coordinate) {
-		super(SOURCE, coordinate, INITIAL_AXIS_DIRECTION);
+	public Skeleton(Coordinate coordinate, World world) {
+		super(SOURCE, coordinate, INITIAL_AXIS_DIRECTION, world);
 		wander();
 	}
 	

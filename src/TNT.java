@@ -4,8 +4,8 @@ public class TNT extends Block {
 	private static final String SOURCE = Loader.SOURCE_FILE + "tnt.png";
 	private CrackedWall linkedCracked = null;
 
-	public TNT(Coordinate coordinate) {
-		super(SOURCE, coordinate);
+	public TNT(Coordinate coordinate, World world) {
+		super(SOURCE, coordinate, world);
 	}
 	
 	/** Move method now checks if we need to explode on new location */
@@ -25,15 +25,15 @@ public class TNT extends Block {
 		Coordinate below  = super.getLocation();
 		below.addY(1 * App.TILE_SIZE);
 		
-		if ((linkedCracked = World.linkCracked(below)) != null) {
+		if ((linkedCracked = checkWorld().linkCracked(below)) != null) {
 			explode();
 		}
 	}
 	
 	/** Destroys TNT, cracked wall and generates explosion */
 	private void explode() {
-		World.killSprite(linkedCracked);
-		World.birthSprite("explosion", super.getLocation());
-		World.killSprite(this);
+		checkWorld().killSprite(linkedCracked);
+		checkWorld().birthSprite("explosion", super.getLocation());
+		checkWorld().killSprite(this);
 	}
 }

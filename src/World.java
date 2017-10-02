@@ -6,17 +6,17 @@ import org.newdawn.slick.Input;
 public class World {
 	
 	/** List of sprites in world */
-	private static List<Sprite> sprites;
+	private List<Sprite> sprites;
 	/** Count of targets covered */
-	private static int targetCount;
+	private int targetCount;
 	/** Targets needed to win level */
-	private static int targetsNeeded;
+	private int targetsNeeded;
 	/** Game won or not */
 	private static boolean gameWon;
 	/** Sprite to be birthed */
-	private static Sprite foetusSprite;
+	private Sprite foetusSprite;
 	/** Moves done so far */
-	private static int moves;
+	private int moves;
 	
 	public World(String level) {
 		
@@ -33,6 +33,8 @@ public class World {
 		
 		gameWon = false;
 		moves = 0;
+		
+		linkDoors();
 		
 	}
 	
@@ -63,7 +65,7 @@ public class World {
 	}
 	
 	// Returns true if coordinates are an unblocked tile
-	public static boolean traversable(Coordinate coord) {
+	public boolean traversable(Coordinate coord) {
 		
 		// Default to blocked
 		boolean traversable = false;
@@ -107,7 +109,7 @@ public class World {
 	}
 	
 	// Returns true if coordinates are an unblocked tile
-	public static boolean hasBlock(Coordinate coord) {
+	public boolean hasBlock(Coordinate coord) {
 		
 		// Loop through sprites checking for tile on coord
 		for (Sprite sprite : sprites) {
@@ -169,7 +171,7 @@ public class World {
 		return true;
 	}
 	
-	public static List<Sprite> getSpritesAt(Coordinate location) {
+	public List<Sprite> getSpritesAt(Coordinate location) {
 		
 		List<Sprite> SpritesAt = new LinkedList<Sprite>();
 		
@@ -182,7 +184,7 @@ public class World {
 		return SpritesAt;
 	}
 	
-	public static PressurePad linkToPad(List<Sprite> spritesAt) {
+	public PressurePad linkToPad(List<Sprite> spritesAt) {
 		
 		for (Sprite sprite : spritesAt) {
 			if (sprite instanceof PressurePad) {
@@ -193,7 +195,7 @@ public class World {
 	}
 	
 	// TODO Definitely a way to merge linkpad and linkwall
-	public static CrackedWall linkCracked(Coordinate location) {
+	public CrackedWall linkCracked(Coordinate location) {
 		
 		List<Sprite> spritesAt = getSpritesAt(location);
 		
@@ -205,7 +207,7 @@ public class World {
 		return null;
 	}
 	
-	public static void updateTargets(int increment) {
+	public void updateTargets(int increment) {
 		targetCount += increment;
 		if (targetCount >= targetsNeeded) {
 			gameWon = true;
@@ -217,13 +219,12 @@ public class World {
 		return gameWon;
 	}
 	
-	public static void killSprite(Sprite dying) {
+	public void killSprite(Sprite dying) {
 		sprites.remove(dying);
 	}
 	
-	public static void birthSprite(String imageName, Coordinate location) {
-		// TODO Fix when not static
-		// foetusSprite = Loader.addSprite(imageName, location, this);
+	public void birthSprite(String imageName, Coordinate location) {
+		foetusSprite = Loader.addSprite(imageName, location, this);
 	}
 	
 	private static void reset() {
@@ -249,7 +250,7 @@ public class World {
 		}
 	}
 	
-	public static void addMove() {
+	public void addMove() {
 		
 		moves += 1;
 		
@@ -261,26 +262,36 @@ public class World {
 				((Rogue) sprite).patrol('x');
 			} else if (sprite instanceof Mage) {
 				// Tells mage to track player
-				((Mage) sprite).trackingMove();
+				((Mage) sprite).trackingMove(this.getPlayerLocation());
 			}
 		}
 	}
 	
-	public static int getMoves() {
+	public int getMoves() {
 		int m = moves;
 		return m;
 	}
 	
-	public static void toggleDoors() {
+	public void linkDoors() {
 		
+		/*  Link first door to the first switch down,
+		 *  second door to the second switch, etc
+		 */
 		for (Sprite sprite : sprites) {
 			if (sprite instanceof Door) {
-				((Door) sprite).toggle();
+				for (Sprite sprite2 : sprites) {
+					if (sprite2 instanceof Switch) {
+						if (((Switch)sprite2).getDoor() == null) {
+							((Switch)sprite2).linkDoor((Door)sprite);
+							break;
+						}
+					}
+				}
 			}
 		}
 	}
 	
-	public static void deadly(Coordinate location) {
+	public void deadly(Coordinate location) {
 		
 		List<Sprite> spritesAt = getSpritesAt(location);
 		
@@ -291,7 +302,8 @@ public class World {
 		}
 	}
 	
-	public static void playerKill(Coordinate location) {
+	// TODO Merge this with deadly
+	public void playerKill(Coordinate location) {
 		
 		List<Sprite> spritesAt = getSpritesAt(location);
 		
@@ -302,7 +314,7 @@ public class World {
 		}
 	}
 	
-	public static Coordinate getPlayerLocation() {
+	public Coordinate getPlayerLocation() {
 		
 		for (Sprite sprite : sprites) {
 			if (sprite instanceof Player) {
