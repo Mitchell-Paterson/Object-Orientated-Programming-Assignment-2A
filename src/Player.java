@@ -6,8 +6,11 @@ public class Player extends Reversable implements Mobile{
 	
 	private static final String SOURCE = Loader.SOURCE_FILE + "player_left.png";
 	
-	public Player(Coordinate coordinate) {
+	private World world;
+	
+	public Player(Coordinate coordinate, World world) {
 		super(SOURCE, coordinate);
+		this.world = world;
 	}
 	
 	/** Takes input and converts to a move order */
@@ -56,10 +59,10 @@ public class Player extends Reversable implements Mobile{
 		Coordinate temp = Mobile.calculateMove(distance, direction, super.getLocation());
 		
 		// We check it's okay to walk on and everything there can be pushed away
-		if (World.traversable(temp) && World.push(distance, direction, temp.clone())) {
+		if (world.traversable(temp) && world.push(distance, direction, temp.clone())) {
 			super.setLocation(temp);
-			World.addMove();
-			World.deadly(temp);
+			world.addMove();
+			world.deadly(temp);
 			return true;
 		}
 	return false;

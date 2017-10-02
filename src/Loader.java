@@ -11,7 +11,7 @@ public class Loader {
 	 * @param filename
 	 * @return
 	 */
-	public static List<Sprite> loadSprites(String filename) {
+	public static List<Sprite> loadSprites(String filename, World world) {
 		
 		/**line from .lvl file */
 		String line;
@@ -34,7 +34,7 @@ public class Loader {
 				String imageName = parser.image(line);
 				
 				// Decide which image to load
-				sprites.add(addSprite(imageName, coords));
+				sprites.add(addSprite(imageName, coords, world));
 						
 			}
 			
@@ -47,7 +47,7 @@ public class Loader {
 	
 	
 	/** Adds new sprite from data */
-	public static Sprite addSprite(String imageName, Coordinate coords) {
+	public static Sprite addSprite(String imageName, Coordinate coords, World world) {
 		
 		// Decide which sprite to load
 		switch (imageName) {
@@ -65,7 +65,7 @@ public class Loader {
 				return new Target(coords);
 			
 			case "player":
-				return new Player(coords);
+				return new Player(coords, world);
 			
 			case "tnt":
 				return new TNT(coords);
@@ -86,7 +86,7 @@ public class Loader {
 				return new Switch(coords);
 				
 			case "rogue":
-				return new Rogue(coords);
+				return new Rogue(coords, world);
 			
 			case "skeleton":
 				return new Skeleton(coords);

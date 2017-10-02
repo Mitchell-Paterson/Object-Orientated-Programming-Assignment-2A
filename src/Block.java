@@ -17,7 +17,8 @@ public class Block extends Reversable implements Mobile {
 	public boolean move(Coordinate newLoc, List<Sprite> spritesAtNew, int moves) {
 		
 		// Check we can move there before moving
-		if (World.isTraversable(spritesAtNew) && !World.gotBlock(spritesAtNew)) {
+		if (World.isTraversable(spritesAtNew) && 
+				!World.gotSprite(spritesAtNew, Block.class)) {
 			
 			addPrev(super.getLocation());
 			moveIndex.add(moves);

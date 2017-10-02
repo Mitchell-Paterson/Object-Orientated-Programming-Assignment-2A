@@ -20,7 +20,7 @@ public class World {
 	
 	public World(String level) {
 		
-		sprites = Loader.loadSprites(level);
+		sprites = Loader.loadSprites(level, this);
 		
 		// Init
 		targetCount = 0;
@@ -45,6 +45,7 @@ public class World {
 		for (Sprite sprite : sprites) {
 			sprite.update(input);
 		}
+		
 		if (foetusSprite != null) {
 			sprites.add(foetusSprite);
 			foetusSprite = null;
@@ -136,7 +137,21 @@ public class World {
 		return false;
 	}
 	
-	public static boolean push(int distance, char direction, Coordinate location) {
+	// Returns true if coordinates are an unblocked tile
+	public static <S> boolean gotSprite(List<Sprite> spritesAt, Class<S> wanted) {
+		
+		// Loop through sprites checking for tile on coord
+		for (Sprite sprite : spritesAt) {
+			if (wanted.isAssignableFrom(sprite.getClass())) {
+				return true;
+			}
+		}
+		
+		// Default to no blocks
+		return false;
+	}
+	
+	public boolean push(int distance, char direction, Coordinate location) {
 		
 		List<Sprite> spritesAtOld = getSpritesAt(location);
 		
@@ -154,7 +169,7 @@ public class World {
 		return true;
 	}
 	
-	private static List<Sprite> getSpritesAt(Coordinate location) {
+	public static List<Sprite> getSpritesAt(Coordinate location) {
 		
 		List<Sprite> SpritesAt = new LinkedList<Sprite>();
 		
@@ -207,7 +222,8 @@ public class World {
 	}
 	
 	public static void birthSprite(String imageName, Coordinate location) {
-		foetusSprite = Loader.addSprite(imageName, location);
+		// TODO Fix when not static
+		// foetusSprite = Loader.addSprite(imageName, location, this);
 	}
 	
 	private static void reset() {
