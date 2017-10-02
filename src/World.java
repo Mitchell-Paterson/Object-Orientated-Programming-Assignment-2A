@@ -168,6 +168,8 @@ public class World {
 				}
 			}
 		}
+		
+		// Once it's moved, we check if we've met the target count
 		return true;
 	}
 	
@@ -191,6 +193,7 @@ public class World {
 				return (PressurePad) sprite;
 			}
 		}
+		// Should che
 		return null;
 	}
 	
@@ -207,6 +210,7 @@ public class World {
 		return null;
 	}
 	
+	// Change to count targets
 	public void updateTargets(int increment) {
 		targetCount += increment;
 		if (targetCount >= targetsNeeded) {
