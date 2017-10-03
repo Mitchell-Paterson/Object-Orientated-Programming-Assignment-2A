@@ -17,10 +17,14 @@ public class World {
 	private Sprite foetusSprite;
 	/** Moves done so far */
 	private int moves;
+	/** App world is contained in */
+	private App app;
 	
-	public World(String level) {
+	public World(int level, App app) {
 		
-		sprites = Loader.loadSprites(level, this);
+		String levelSource = Loader.SOURCE_FILE + "levels/" + level + ".lvl";
+		
+		sprites = Loader.loadSprites(levelSource, this);
 		
 		// Init
 		targetCount = 0;
@@ -35,6 +39,8 @@ public class World {
 		moves = 0;
 		
 		linkDoors();
+		
+		this.app = app;
 		
 	}
 	
@@ -155,21 +161,17 @@ public class World {
 	
 	public boolean push(int distance, char direction, Coordinate location) {
 		
-		List<Sprite> spritesAtOld = getSpritesAt(location);
+		List<Sprite> spritesAt = getSpritesAt(location);
 		
-		Coordinate newLoc = Mobile.calculateMove(distance, direction, location.clone());
-		
-		List<Sprite> spritesAtNew = getSpritesAt(newLoc);
-		
-		for (Sprite sprite : spritesAtOld) {
+		for (Sprite sprite : spritesAt) {
 			if (sprite instanceof Block) {
-				if (!((Block)sprite).move(newLoc, spritesAtNew, moves)){
+				if (!((Block)sprite).move(distance, direction)){
 					return false;
 				}
 			}
 		}
 		
-		// Once it's moved, we check if we've met the target count
+		// TODO Once it's moved, we check if we've met the target count
 		return true;
 	}
 	
@@ -186,14 +188,13 @@ public class World {
 		return SpritesAt;
 	}
 	
-	public PressurePad linkToPad(List<Sprite> spritesAt) {
+	public static PressurePad linkToPad(List<Sprite> spritesAt) {
 		
 		for (Sprite sprite : spritesAt) {
 			if (sprite instanceof PressurePad) {
 				return (PressurePad) sprite;
 			}
 		}
-		// Should che
 		return null;
 	}
 	
@@ -231,8 +232,8 @@ public class World {
 		foetusSprite = Loader.addSprite(imageName, location, this);
 	}
 	
-	private static void reset() {
-		App.resetLvl();
+	private void reset() {
+		app.resetLvl();
 	}
 	
 	private void undo() {

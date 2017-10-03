@@ -13,25 +13,6 @@ public class Block extends Reversable implements Mobile {
 		moveIndex = new LinkedList<Integer>();
 	}
 	
-	// Overrides, but I'm messing with things
-	public boolean move(Coordinate newLoc, List<Sprite> spritesAtNew, int moves) {
-		
-		// Check we can move there before moving
-		if (World.isTraversable(spritesAtNew) && 
-				!World.gotSprite(spritesAtNew, Block.class)) {
-			
-			addPrev(super.getLocation());
-			moveIndex.add(moves);
-			
-			super.setLocation(newLoc);
-			
-			updatePad(spritesAtNew);
-			
-			return true;
-		}
-	return false;
-	}
-	
 	@Override
 	public void reset() {
 		super.reset();
@@ -51,7 +32,7 @@ public class Block extends Reversable implements Mobile {
 	}
 	
 	
-	public void updatePad(List<Sprite> spritesAtNew) {
+	public void updatePad(List<Sprite> spritesAt) {
 		
 		// Will need to catch null error
 		if (onPressurePad) {
@@ -59,30 +40,22 @@ public class Block extends Reversable implements Mobile {
 			linkedPad.deactivate();
 			linkedPad = null;
 		}
-		if ((linkedPad = checkWorld().linkToPad(spritesAtNew)) != null){
+		linkedPad = World.linkToPad(spritesAt);
+		if (linkedPad != null) {
 			onPressurePad = true;
 			linkedPad.activate();
 		}
 	}
-
+	
 	@Override
-	public boolean move(int distance, char direction) {
-		
-			Coordinate temp = Mobile.calculateMove(distance, direction, super.getLocation());
-			
-			// Check we can move there before moving
-			if (checkWorld().traversable(temp) && !checkWorld().hasBlock(temp)) {
-				
-				addPrev(this.getLocation());
-				moveIndex.add(checkWorld().getMoves());
-				
-				super.setLocation(temp);
-				
-				// updatePad();
-				
-				return true;
-			}
-		return false;
+	public void beforeMove(List<Sprite> spritesAt) {
+		addPrev(this.getLocation());
+		moveIndex.add(checkWorld().getMoves());
+	}
+	
+	@Override
+	public void afterMove(List<Sprite> spritesAt) {
+		updatePad(spritesAt);
 	}
 
 }

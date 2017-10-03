@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -49,15 +50,14 @@ public class Ice extends Block {
 		
 		Coordinate temp = Mobile.calculateMove(distance, direction, super.getLocation());
 		
-		// Check we can move there before moving
-		if (checkWorld().traversable(temp) && !checkWorld().hasBlock(temp)) {
-			
+		List<Sprite> spritesAt = checkWorld().getSpritesAt(temp);
+		
+		if(moveChecks(spritesAt, temp, distance, direction)) {
+			// beforeMove omitted
 			super.setLocation(temp);
-			
-			// updatePad();
-			
+			afterMove(spritesAt);
 			return true;
 		}
-	return false;
+		return false;
 	}
 }
