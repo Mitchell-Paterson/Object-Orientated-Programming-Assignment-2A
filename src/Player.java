@@ -1,10 +1,8 @@
-import java.util.List;
-
 import org.newdawn.slick.Input;
 
-public class Player extends Reversable implements Mobile{
+public class Player extends Reversable {
 	
-	private static final String SOURCE = Loader.SOURCE_FILE + "player_left.png";
+	private static final String SOURCE = Loader.SOURCE_FOLDER + "player_left.png";
 	
 	public Player(Coordinate coordinate, World world) {
 		super(SOURCE, coordinate, world);
@@ -30,9 +28,14 @@ public class Player extends Reversable implements Mobile{
 			moved = move(1, 'x');
 		}
 		
+		if (checkWorld().gotSprite(getLocation(), Enemy.class)) {
+			checkWorld().reset();
+		}
+		
 		if (moved) {
 			addPrev(prevLocation);
 		}
+		
 		
 	}
 	
@@ -46,20 +49,8 @@ public class Player extends Reversable implements Mobile{
 	}
 	
 	@Override
-	public void afterMove(List<Sprite> spritesAt) {
+	public void afterMove() {
 		checkWorld().addMove();
-		checkWorld().deadly(getLocation());
-	}
-
-	
-	@Override
-	public Coordinate undo() {
-		Coordinate newLoc = super.undo();
-		if (newLoc != null) {
-			checkWorld().deadly(newLoc);
-			return newLoc;
-		}
-		return null;
 	}
 	
 }

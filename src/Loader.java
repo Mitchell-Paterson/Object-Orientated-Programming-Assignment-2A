@@ -4,7 +4,8 @@ import java.util.*;
 
 public class Loader {
 	
-	public final static String SOURCE_FILE = "res/";
+	public final static String SOURCE_FOLDER = "res/";
+	public final static String LEVEL_FOLDER = "levels/";
 	
 	/**
 	 * Loads the sprites from a given level file.
@@ -62,7 +63,7 @@ public class Loader {
 				return new Stone(coords, world);
 			
 			case "target":
-				return new Target(coords, world);
+				return new Target(coords);
 			
 			case "player":
 				return new Player(coords, world);

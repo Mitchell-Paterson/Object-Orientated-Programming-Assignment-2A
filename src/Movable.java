@@ -1,5 +1,3 @@
-import java.util.List;
-
 public class Movable extends Sprite {
 	
 	private World world;
@@ -16,30 +14,31 @@ public class Movable extends Sprite {
 
 	public boolean move(int distance, char direction) {
 		
-		Coordinate newLoc = Mobile.calculateMove(distance, direction, getLocation());
-		List<Sprite> spritesAt = world.getSpritesAt(newLoc);
+		Coordinate newLoc = calculateMove(distance, direction, getLocation());
 		
 		if(moveChecks(newLoc, distance, direction)) {
-			beforeMove(spritesAt);
+			beforeMove();
 			super.setLocation(newLoc);
-			afterMove(spritesAt);
+			afterMove();
 			return true;
 		}
 		return false;
 	}
 	
 	public boolean moveChecks(Coordinate newLoc, int distance, char direction) {
-		if (checkWorld().traversable(newLoc) && !checkWorld().hasBlock(newLoc)) {
+		if (checkWorld().traversable(newLoc) && !checkWorld().gotSprite(newLoc, Block.class)) {
 			return true;
 		}
 		return false;
 	}
 	
-	public void beforeMove(List<Sprite> spritesAt) {
+	// Empty by default
+	public void beforeMove() {
 		
 	}
 	
-	public void afterMove(List<Sprite> spritesAt) {
+	// Empty by default
+	public void afterMove() {
 		
 	}
 	

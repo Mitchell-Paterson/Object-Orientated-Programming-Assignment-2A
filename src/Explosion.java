@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Explosion extends Sprite {
 
-	private final static String SOURCE = Loader.SOURCE_FILE + "explosion.png";
+	private final static String SOURCE = Loader.SOURCE_FOLDER + "explosion.png";
 	private final static int EXIST_TIME = 400;
 	private World world;
 	

@@ -1,12 +1,11 @@
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Skeleton extends Enemy {
 	
-	private final static String SOURCE = Loader.SOURCE_FILE + "skull.png";
+	private final static String SOURCE = Loader.SOURCE_FOLDER + "skull.png";
 	/** Delay between moves in milliseconds */
-	private final static int WANDER_DELAY = 1000;
+	private final static int PATROL_DELAY = 1000;
 	/** Starting direction, always starts going up */
 	private final static int INITIAL_AXIS_DIRECTION = -1;
 	/** Axis to patrol along */
@@ -14,19 +13,14 @@ public class Skeleton extends Enemy {
 	
 	public Skeleton(Coordinate coordinate, World world) {
 		super(SOURCE, coordinate, INITIAL_AXIS_DIRECTION, world);
-		wander();
+		Timer timer = new Timer();
+		timer.schedule(new PatrolTask(), PATROL_DELAY, PATROL_DELAY);
 	}
 	
-	/** Tells skeleton to wander every second */
-	private void wander() {
-		// Stack overflow executor service
-	    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-	    executorService.scheduleAtFixedRate(new Runnable() {
-	        @Override
-	        public void run() {
-	        	// Move along y axis
-	        	patrol(PATROL_AXIS);
-	        }
-	    }, WANDER_DELAY, WANDER_DELAY, TimeUnit.MILLISECONDS);
+	class PatrolTask extends TimerTask {
+		@Override
+		public void run() {
+			patrol(PATROL_AXIS);
+		}
 	}
 }

@@ -2,8 +2,8 @@ import java.lang.Math;
 
 public class Mage extends Enemy {
 	
-	private final static String SOURCE = Loader.SOURCE_FILE + "mage.png";
-	/** Unused for Mage */
+	private final static String SOURCE = Loader.SOURCE_FOLDER + "mage.png";
+	/** Unused for Mage, as she decides the direction to go */
 	private final static int INITIAL_AXIS_DIRECTION = -1;
 	
 	public Mage(Coordinate coordinate, World world) {
@@ -14,15 +14,15 @@ public class Mage extends Enemy {
 		
 		Coordinate mageLoc = getLocation();
 		
-		float distX = Math.abs(playerLoc.getX() - mageLoc.getX());
-		float distY = Math.abs(playerLoc.getY() - mageLoc.getY());
+		float distX = playerLoc.getX() - mageLoc.getX();
+		float distY = playerLoc.getY() - mageLoc.getY();
 		
 		int sign = 1;
 		if (distX < 0) {
 			sign = -1;
 		}
 		
-		if (distX > distY) {
+		if (Math.abs(distX) > Math.abs(distY)) {
 			if(move(sign, 'x')) {
 				// If we get here, we've moved in x direction
 				return;

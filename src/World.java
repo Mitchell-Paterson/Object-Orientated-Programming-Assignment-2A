@@ -11,22 +11,28 @@ public class World {
 	private int targetCount;
 	/** Targets needed to win level */
 	private int targetsNeeded;
-	/** Game won or not */
-	private static boolean gameWon;
-	/** Sprite to be birthed */
-	private Sprite foetusSprite;
+	/** Sprites to add to sprites list */
+	private List<Sprite> spritesToBirth;
+	/** Sprites to delete from sprites list */
+	private List<Sprite> spritesToDie;
 	/** Moves done so far */
 	private int moves;
-	/** App world is contained in */
+	/** App this world is contained in */
 	private App app;
+	/** HUD x coordinate, in pixels */
+	private static final int HUD_X_LOCATION = 50;
+	/** Move counter y location, in pixels */
+	private static final int MOVES_Y_LOCATION = 50;
+	/** Target counter y location, in pixels */
+	private static final int TARGETS_Y_LOCATION = 70;
 	
 	public World(int level, App app) {
 		
-		String levelSource = Loader.SOURCE_FILE + "levels/" + level + ".lvl";
+		String levelSource = Loader.SOURCE_FOLDER + "levels/" + level + ".lvl";
 		
 		sprites = Loader.loadSprites(levelSource, this);
 		
-		// Init
+		// Count how many targets we need to win
 		targetCount = 0;
 		targetsNeeded = 0;
 		for (Sprite sprite : sprites) {
@@ -35,13 +41,11 @@ public class World {
 			}
 		}
 		
-		gameWon = false;
 		moves = 0;
-		
 		linkDoors();
-		
 		this.app = app;
-		
+		spritesToBirth = new LinkedList<Sprite>();
+		spritesToDie = new LinkedList<Sprite>();
 	}
 	
 	public void update(Input input) {
@@ -54,10 +58,17 @@ public class World {
 			sprite.update(input);
 		}
 		
-		if (foetusSprite != null) {
-			sprites.add(foetusSprite);
-			foetusSprite = null;
+		// Add and remove queued sprites
+		if (spritesToBirth != null) {
+			sprites.addAll(spritesToBirth);
+			spritesToBirth.clear();
 		}
+		if (spritesToDie != null) {
+			sprites.removeAll(spritesToDie);
+			spritesToDie.clear();
+		}
+		
+		
 	}
 	
 	public void render(Graphics g) {
@@ -65,16 +76,18 @@ public class World {
 		for (Sprite sprite : sprites) {
 			sprite.render(g);
 		}
-		// Need to put the location in constant
-		g.drawString("Moves: " + moves, 50, 50);
-		g.drawString("Targets: " + targetCount + "/" + targetsNeeded, 50, 70);
+		
+		// Draw move count and targets so far
+		g.drawString("Moves: " + moves, HUD_X_LOCATION, MOVES_Y_LOCATION);
+		g.drawString("Targets: " + targetCount + "/" + targetsNeeded,
+				HUD_X_LOCATION, TARGETS_Y_LOCATION);
 	}
 	
 	// Returns true if coordinates are an unblocked tile
 	public boolean traversable(Coordinate coord) {
 		
 		// Default to blocked
-		boolean traversable = false;
+		boolean traversability = false;
 		
 		// Loop through sprites checking for tile on coord
 		for (Sprite sprite : sprites) {
@@ -82,89 +95,34 @@ public class World {
 				if (sprite instanceof Tile) {
 					// If multiple tiles, it only takes one blocked for false
 					if (((Tile) sprite).isTraversable()) {
-						traversable = true;
+						traversability = true;
 					} else {
 						return false;
 					}
 				}
 			}
 		}
-		
-		return traversable;
+		return traversability;
 	}
 	
-	// Returns true if coordinates are an unblocked tile
-	public static boolean isTraversable(List<Sprite> spritesAt) {
-		
-		// Default to blocked
-		boolean traversable = false;
-		
-		// Loop through sprites checking for tile on coord
-		for (Sprite sprite : spritesAt) {
-			if (sprite instanceof Tile) {
-				// If multiple tiles, it only takes one blocked for false
-				if (((Tile) sprite).isTraversable()) {
-					traversable = true;
-				} else {
-					return false;
-				}
-			}
-		}
-		
-		return traversable;
-	}
-	
-	// Returns true if coordinates are an unblocked tile
-	public boolean hasBlock(Coordinate coord) {
-		
-		// Loop through sprites checking for tile on coord
-		for (Sprite sprite : sprites) {
-			// TODO Reprogram with getSpritesAt
-			if (sprite.getLocation().equals(coord)) {
-				if (sprite instanceof Block) {
-					return true;
-				}
-			}
-		}
-		
-		// Default to no blocks
-		return false;
-	}
-	
-	// Returns true if coordinates are an unblocked tile
-	public static boolean gotBlock(List<Sprite> spritesAt) {
-		
-		// Loop through sprites checking for tile on coord
-		for (Sprite sprite : spritesAt) {
-			if (sprite instanceof Block) {
-				return true;
-			}
-		}
-		
-		// Default to no blocks
-		return false;
-	}
-	
-	// Returns true if coordinates are an unblocked tile
+	// Returns true if coordinates have sprite
 	public boolean gotSprite(Coordinate coord, Class<?> type) {
 		
-		// Loop through sprites checking for tile on coord
+		// Loop through sprites checking for sprite on coord
 		for (Sprite sprite : sprites) {
-			if (sprite.getLocation().equals(coord) && sprite.getClass().equals(type)) {
+			if (sprite.getLocation().equals(coord) && type.isInstance(sprite)) {
 				return true;
 			}
 		}
 		
-		// Default to no blocks
+		// Default to doesn't contain sprite
 		return false;
 	}
 	
 	public boolean push(int distance, char direction, Coordinate location) {
 		
-		List<Sprite> spritesAt = getSpritesAt(location);
-		
-		for (Sprite sprite : spritesAt) {
-			if (sprite instanceof Block) {
+		for (Sprite sprite : sprites) {
+			if (sprite.getLocation().equals(location) && sprite instanceof Block) {
 				if (!((Block)sprite).move(distance, direction)){
 					return false;
 				}
@@ -175,64 +133,29 @@ public class World {
 		return true;
 	}
 	
-	public List<Sprite> getSpritesAt(Coordinate location) {
+	/* Gets the first sprite of specified type it encounters at location */
+	public Sprite getSpriteAt(Coordinate location, Class<?> type) {
 		
-		List<Sprite> SpritesAt = new LinkedList<Sprite>();
-		
+		// Loop through sprites checking for sprite on coord
 		for (Sprite sprite : sprites) {
-			if (sprite.getLocation().equals(location)) {
-				SpritesAt.add(sprite);
+			if (sprite.getLocation().equals(location) && type.isInstance(sprite)) {
+				return sprite;
 			}
 		}
 		
-		return SpritesAt;
-	}
-	
-	public static PressurePad linkToPad(List<Sprite> spritesAt) {
-		
-		for (Sprite sprite : spritesAt) {
-			if (sprite instanceof PressurePad) {
-				return (PressurePad) sprite;
-			}
-		}
+		// Default to doesn't contain sprite
 		return null;
 	}
-	
-	// TODO Definitely a way to merge linkpad and linkwall
-	public CrackedWall linkCracked(Coordinate location) {
-		
-		List<Sprite> spritesAt = getSpritesAt(location);
-		
-		for (Sprite sprite : spritesAt) {
-			if (sprite instanceof CrackedWall) {
-				return (CrackedWall) sprite;
-			}
-		}
-		return null;
-	}
-	
-	// Change to count targets
-	public void updateTargets(int increment) {
-		targetCount += increment;
-		if (targetCount >= targetsNeeded) {
-			gameWon = true;
-		}
-	}
-	
-	public boolean won() {
-		boolean gameWon = World.gameWon;
-		return gameWon;
-	}
-	
+
 	public void killSprite(Sprite dying) {
-		sprites.remove(dying);
+		spritesToDie.add(dying);
 	}
 	
 	public void birthSprite(String imageName, Coordinate location) {
-		foetusSprite = Loader.addSprite(imageName, location, this);
+		spritesToBirth.add(Loader.addSprite(imageName, location, this));
 	}
 	
-	private void reset() {
+	public void reset() {
 		app.resetLvl();
 	}
 	
@@ -245,11 +168,7 @@ public class World {
 					((Player) sprite).undo();
 				}
 				else if (sprite instanceof Block) {
-					Coordinate newLoc = ((Block) sprite).undo(moves);
-					if (newLoc != null) {
-						List<Sprite> spritesAt = getSpritesAt(newLoc);
-						((Block) sprite).updatePad(spritesAt);
-					}
+					((Block) sprite).undo(moves);
 				}
 			}
 		}
@@ -258,17 +177,36 @@ public class World {
 	public void addMove() {
 		
 		moves += 1;
+		int count = 0;
 		
 		// TODO Rogue and mage need to move whether player succeeds or not
 		for (Sprite sprite : sprites) {
+			
 			if (sprite instanceof Rogue) {
 				// Tells rogue to patrol along x axis
 				// TODO Remove magic character
-				((Rogue) sprite).patrol('x');
+				((Rogue) sprite).patrol();
 			} else if (sprite instanceof Mage) {
 				// Tells mage to track player
 				((Mage) sprite).trackingMove(getPlayerLocation());
 			}
+		}
+	}
+	
+	public void updateTargets() {
+		
+		// Count targets that have a block
+		int count = 0;
+		for (Sprite sprite: sprites) {
+			if (sprite instanceof Target && ((Target) sprite).isOn()) {
+				count += 1;
+			}
+		}
+		
+		// Update count and check if level won
+		targetCount = count;
+		if (targetCount >= targetsNeeded) {
+			app.nextLvl();
 		}
 	}
 	
@@ -292,27 +230,6 @@ public class World {
 						}
 					}
 				}
-			}
-		}
-	}
-	
-	public void deadly(Coordinate location) {
-		
-		List<Sprite> spritesAt = getSpritesAt(location);
-		
-		for (Sprite sprite : spritesAt) {
-			if (sprite instanceof Enemy) {
-				reset();
-			}
-		}
-	}
-	
-	// TODO Merge this with deadly
-	public void playerKill(Coordinate coord) {
-		
-		for (Sprite sprite : sprites) {
-			if (sprite.getLocation().equals(coord) && sprite instanceof Player) {
-				reset();
 			}
 		}
 	}

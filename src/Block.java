@@ -1,11 +1,11 @@
 import java.util.LinkedList;
-import java.util.List;
 
 
-public class Block extends Reversable implements Mobile {
+public class Block extends Reversable {
 	
-	private boolean onPressurePad = false;
-	private PressurePad linkedPad = null;
+	/** Pressure pad the block is interacting with */
+	private PressurePad linkedPad;
+	/* Saves which move number a move was made on */
 	private LinkedList<Integer> moveIndex;
 	
 	public Block(String image_src, Coordinate coordinate, World world) {
@@ -13,49 +13,53 @@ public class Block extends Reversable implements Mobile {
 		moveIndex = new LinkedList<Integer>();
 	}
 	
-	@Override
-	public void reset() {
-		super.reset();
-		moveIndex.clear();
-	}
-	
 	// TODO Not overriding, instead overloading, not sure if safe
-	public Coordinate undo(int moves) {
+	public void undo(int moves) {
 		
-		if (moveIndex.size() > 0) {
+		// Check we have move history
+		if (!moveIndex.isEmpty()) {
+			// Check we are at the current point in move history
 			if (moveIndex.getLast() == moves) {
 				moveIndex.removeLast();
-				return super.undo();
+				// Undo latest move
+				super.undo();
+				updatePad();
 			}
 		}
-		return null;
 	}
 	
 	
-	public void updatePad(List<Sprite> spritesAt) {
+	public void updatePad() {
 		
-		// Will need to catch null error
-		if (onPressurePad) {
-			onPressurePad = false;
-			linkedPad.deactivate();
+		// Leave current PressurePad
+		if (linkedPad != null) {
+			linkedPad.toggle();
 			linkedPad = null;
 		}
-		linkedPad = World.linkToPad(spritesAt);
+		
+		// Check if block has new pad now
+		linkedPad = (PressurePad)
+				checkWorld().getSpriteAt(getLocation(), PressurePad.class);
+		
+		// If new pad, activate it
 		if (linkedPad != null) {
-			onPressurePad = true;
-			linkedPad.activate();
+			linkedPad.toggle();
 		}
+		
+		// Tell world to update it's target count
+		checkWorld().updateTargets();
 	}
 	
 	@Override
-	public void beforeMove(List<Sprite> spritesAt) {
+	public void beforeMove() {
+		// Add move history
 		addPrev(getLocation());
 		moveIndex.add(checkWorld().getMoves());
 	}
 	
 	@Override
-	public void afterMove(List<Sprite> spritesAt) {
-		updatePad(spritesAt);
+	public void afterMove() {
+		updatePad();
 	}
 
 }

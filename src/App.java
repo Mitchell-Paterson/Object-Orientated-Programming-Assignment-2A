@@ -28,7 +28,7 @@ public class App extends BasicGame
     public static final int LEVELS = 6;
     
     private World world;
-    private int level = 4;
+    private int level = 0;
     public App()
     {    	
         super("Shadow Blocks");
@@ -41,10 +41,10 @@ public class App extends BasicGame
     	world = new World(level, this);
     }
     
-    private void nextLvl() {
+    public void nextLvl() {
     	level += 1;
     	if (level < 6) {
-    	world = new World(level, this);
+    		world = new World(level, this);
     	}
     }
     
@@ -59,10 +59,7 @@ public class App extends BasicGame
     @Override
     public void update(GameContainer gc, int delta)
     throws SlickException
-    {
-    	if (world.won()) {
-    		nextLvl();
-    	}
+    {	
         // Get data about the current input (keyboard state).
         Input input = gc.getInput();
 		
@@ -70,6 +67,7 @@ public class App extends BasicGame
         if (input.isKeyDown(Input.KEY_ESCAPE)) {
 			System.exit(0);
 		}
+        // Manual reset handled here
         if (input.isKeyDown(Input.KEY_R)) {
         	resetLvl();
         }

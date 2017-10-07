@@ -1,13 +1,13 @@
 
 public class Switch extends PressurePad {
 	
-	private final static String SOURCE = Loader.SOURCE_FILE + "switch.png";
+	private final static String SOURCE = Loader.SOURCE_FOLDER + "switch.png";
 	private Door linkedDoor;
 
 	public Switch(Coordinate coordinate) {
 		super(SOURCE, coordinate);
 	}
-
+	/*
 	@Override
 	public void activate() {
 		linkedDoor.toggle();
@@ -17,7 +17,12 @@ public class Switch extends PressurePad {
 	@Override
 	public void deactivate() {
 		linkedDoor.toggle();
-
+	}
+	*/
+	
+	@Override
+	public void toggle() {
+		linkedDoor.toggle();
 	}
 	
 	public void linkDoor(Door door) {

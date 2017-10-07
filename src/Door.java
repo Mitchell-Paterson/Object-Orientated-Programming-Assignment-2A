@@ -3,7 +3,7 @@ import org.newdawn.slick.Graphics;
 public class Door extends Tile {
 	
 	private final static boolean STARTS_OPEN = false;
-	private final static String SOURCE = Loader.SOURCE_FILE + "door.png";
+	private final static String SOURCE = Loader.SOURCE_FOLDER + "door.png";
 	private boolean open;
 
 	public Door(Coordinate coordinate) {
