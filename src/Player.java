@@ -37,8 +37,8 @@ public class Player extends Reversable implements Mobile{
 	}
 	
 	@Override
-	public boolean moveChecks(List<Sprite> spritesAt, Coordinate newLoc, int distance, char direction) {
-		if (World.isTraversable(spritesAt) 
+	public boolean moveChecks(Coordinate newLoc, int distance, char direction) {
+		if (checkWorld().traversable(newLoc) 
 				&& checkWorld().push(distance, direction, newLoc.clone())) {
 			return true;
 		}

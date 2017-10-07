@@ -49,7 +49,7 @@ public class Block extends Reversable implements Mobile {
 	
 	@Override
 	public void beforeMove(List<Sprite> spritesAt) {
-		addPrev(this.getLocation());
+		addPrev(getLocation());
 		moveIndex.add(checkWorld().getMoves());
 	}
 	

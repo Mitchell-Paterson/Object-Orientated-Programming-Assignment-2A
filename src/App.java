@@ -28,7 +28,7 @@ public class App extends BasicGame
     public static final int LEVELS = 6;
     
     private World world;
-    private int level = 2;
+    private int level = 4;
     public App()
     {    	
         super("Shadow Blocks");

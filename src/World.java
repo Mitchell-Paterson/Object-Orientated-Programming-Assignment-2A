@@ -146,11 +146,11 @@ public class World {
 	}
 	
 	// Returns true if coordinates are an unblocked tile
-	public static <S> boolean gotSprite(List<Sprite> spritesAt, Class<S> wanted) {
+	public boolean gotSprite(Coordinate coord, Class<?> type) {
 		
 		// Loop through sprites checking for tile on coord
-		for (Sprite sprite : spritesAt) {
-			if (wanted.isAssignableFrom(sprite.getClass())) {
+		for (Sprite sprite : sprites) {
+			if (sprite.getLocation().equals(coord) && sprite.getClass().equals(type)) {
 				return true;
 			}
 		}
@@ -267,7 +267,7 @@ public class World {
 				((Rogue) sprite).patrol('x');
 			} else if (sprite instanceof Mage) {
 				// Tells mage to track player
-				((Mage) sprite).trackingMove(this.getPlayerLocation());
+				((Mage) sprite).trackingMove(getPlayerLocation());
 			}
 		}
 	}
@@ -308,18 +308,16 @@ public class World {
 	}
 	
 	// TODO Merge this with deadly
-	public void playerKill(Coordinate location) {
+	public void playerKill(Coordinate coord) {
 		
-		List<Sprite> spritesAt = getSpritesAt(location);
-		
-		for (Sprite sprite : spritesAt) {
-			if (sprite instanceof Player) {
+		for (Sprite sprite : sprites) {
+			if (sprite.getLocation().equals(coord) && sprite instanceof Player) {
 				reset();
 			}
 		}
 	}
 	
-	public Coordinate getPlayerLocation() {
+	private Coordinate getPlayerLocation() {
 		
 		for (Sprite sprite : sprites) {
 			if (sprite instanceof Player) {

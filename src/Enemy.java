@@ -1,3 +1,4 @@
+import java.util.List;
 
 public abstract class Enemy extends Movable implements Mobile {
 	
@@ -8,6 +9,7 @@ public abstract class Enemy extends Movable implements Mobile {
 		step = initialStep;
 	}
 	
+	/*
 	@Override
 	public boolean move(int distance, char direction) {
 		
@@ -23,6 +25,7 @@ public abstract class Enemy extends Movable implements Mobile {
 		// Couldn't move there
 		return false;
 	}
+	*/
 	
 	/** Decides which way to move along axis */
 	public void patrol(char axis) {
@@ -31,6 +34,16 @@ public abstract class Enemy extends Movable implements Mobile {
 			step *= -1;
 			move(step, axis);
 		}
+	}
+	
+	@Override
+	public void afterMove(List<Sprite> spritesAt) {
+		/*
+		if player at same spot {
+			world.reset;
+		}
+		*/
+		// checkWorld().playerKill(spritesAt);
 	}
 
 }

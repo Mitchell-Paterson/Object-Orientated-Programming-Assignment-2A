@@ -12,7 +12,7 @@ public class Mage extends Enemy {
 	
 	public void trackingMove(Coordinate playerLoc) {
 		
-		Coordinate mageLoc = this.getLocation();
+		Coordinate mageLoc = getLocation();
 		
 		float distX = Math.abs(playerLoc.getX() - mageLoc.getX());
 		float distY = Math.abs(playerLoc.getY() - mageLoc.getY());

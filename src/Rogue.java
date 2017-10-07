@@ -1,3 +1,4 @@
+import java.util.List;
 
 public class Rogue extends Enemy {
 	
@@ -22,9 +23,15 @@ public class Rogue extends Enemy {
 			super.setLocation(temp);
 			return true;
 		}
-		
 	return false;
+	}
 	
+	@Override
+	public boolean moveChecks(Coordinate newLoc, int distance, char direction) {
+		if (checkWorld().traversable(newLoc) && checkWorld().push(distance, direction, newLoc)) {
+			return true;
+		}
+		return false;
 	}
 
 }

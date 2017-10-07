@@ -52,7 +52,7 @@ public class Ice extends Block {
 		
 		List<Sprite> spritesAt = checkWorld().getSpritesAt(temp);
 		
-		if(moveChecks(spritesAt, temp, distance, direction)) {
+		if(moveChecks(temp, distance, direction)) {
 			// beforeMove omitted
 			super.setLocation(temp);
 			afterMove(spritesAt);

@@ -16,20 +16,20 @@ public class Movable extends Sprite {
 
 	public boolean move(int distance, char direction) {
 		
-		Coordinate temp = Mobile.calculateMove(distance, direction, this.getLocation());
-		List<Sprite> spritesAt = world.getSpritesAt(temp);
+		Coordinate newLoc = Mobile.calculateMove(distance, direction, getLocation());
+		List<Sprite> spritesAt = world.getSpritesAt(newLoc);
 		
-		if(moveChecks(spritesAt, temp, distance, direction)) {
+		if(moveChecks(newLoc, distance, direction)) {
 			beforeMove(spritesAt);
-			super.setLocation(temp);
+			super.setLocation(newLoc);
 			afterMove(spritesAt);
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean moveChecks(List<Sprite> spritesAt, Coordinate newLoc, int distance, char direction) {
-		if (World.isTraversable(spritesAt) && !World.gotBlock(spritesAt)) {
+	public boolean moveChecks(Coordinate newLoc, int distance, char direction) {
+		if (checkWorld().traversable(newLoc) && !checkWorld().hasBlock(newLoc)) {
 			return true;
 		}
 		return false;
