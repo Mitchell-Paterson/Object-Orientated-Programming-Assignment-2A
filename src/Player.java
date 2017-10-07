@@ -35,22 +35,17 @@ public class Player extends Reversable {
 		if (moved) {
 			addPrev(prevLocation);
 		}
-		
-		
 	}
 	
 	@Override
 	public boolean moveChecks(Coordinate newLoc, int distance, char direction) {
+		
 		if (checkWorld().traversable(newLoc) 
 				&& checkWorld().push(distance, direction, newLoc.clone())) {
+			checkWorld().addMove(true, newLoc);
 			return true;
 		}
+		checkWorld().addMove(false, newLoc);
 		return false;
 	}
-	
-	@Override
-	public void afterMove() {
-		checkWorld().addMove();
-	}
-	
 }

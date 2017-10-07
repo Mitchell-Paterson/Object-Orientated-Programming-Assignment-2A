@@ -18,7 +18,7 @@ public class Mage extends Enemy {
 		float distY = playerLoc.getY() - mageLoc.getY();
 		
 		int sign = 1;
-		if (distX < 0) {
+		if (distX <= 0) {
 			sign = -1;
 		}
 		

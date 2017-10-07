@@ -41,7 +41,7 @@ public class Ice extends Block {
 	// Special move to use only while sliding, instead of normal move
 	public boolean slide_move(int distance, char direction) {
 		
-		Coordinate temp = calculateMove(distance, direction, super.getLocation());
+		Coordinate temp = calculateMove(distance, direction);
 		
 		if(moveChecks(temp, distance, direction)) {
 			// beforeMove omitted, no move saving

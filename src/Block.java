@@ -45,9 +45,6 @@ public class Block extends Reversable {
 		if (linkedPad != null) {
 			linkedPad.toggle();
 		}
-		
-		// Tell world to update it's target count
-		checkWorld().updateTargets();
 	}
 	
 	@Override

@@ -7,9 +7,6 @@ public abstract class PressurePad extends Tile {
 		super(image_src, coordinate, TRAVERSABLE);
 	}
 	
-	/*public void activate();
-	abstract public void deactivate();
-	*/
 	abstract public void toggle();
 
 }

@@ -7,18 +7,6 @@ public class Switch extends PressurePad {
 	public Switch(Coordinate coordinate) {
 		super(SOURCE, coordinate);
 	}
-	/*
-	@Override
-	public void activate() {
-		linkedDoor.toggle();
-
-	}
-
-	@Override
-	public void deactivate() {
-		linkedDoor.toggle();
-	}
-	*/
 	
 	@Override
 	public void toggle() {

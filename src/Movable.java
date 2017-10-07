@@ -14,7 +14,7 @@ public class Movable extends Sprite {
 
 	public boolean move(int distance, char direction) {
 		
-		Coordinate newLoc = calculateMove(distance, direction, getLocation());
+		Coordinate newLoc = calculateMove(distance, direction);
 		
 		if(moveChecks(newLoc, distance, direction)) {
 			beforeMove();
@@ -42,9 +42,9 @@ public class Movable extends Sprite {
 		
 	}
 	
-	public static Coordinate calculateMove(int distance, char direction, Coordinate location) {
+	public Coordinate calculateMove(int distance, char direction) {
 		
-		Coordinate temp = location.clone();
+		Coordinate temp = getLocation();
 		
 		float realDist = distance * App.TILE_SIZE;
 		

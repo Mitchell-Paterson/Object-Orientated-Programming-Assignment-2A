@@ -43,7 +43,7 @@ public class App extends BasicGame
     
     public void nextLvl() {
     	level += 1;
-    	if (level < 6) {
+    	if (level < LEVELS) {
     		world = new World(level, this);
     	}
     }
@@ -60,6 +60,10 @@ public class App extends BasicGame
     public void update(GameContainer gc, int delta)
     throws SlickException
     {	
+    	
+    	if (world.won()) {
+    		nextLvl();
+    	}
         // Get data about the current input (keyboard state).
         Input input = gc.getInput();
 		

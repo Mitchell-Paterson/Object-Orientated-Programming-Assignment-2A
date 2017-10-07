@@ -19,6 +19,8 @@ public class World {
 	private int moves;
 	/** App this world is contained in */
 	private App app;
+	/** Boolean indicating all targets filled */
+	private boolean gameWon = false;
 	/** HUD x coordinate, in pixels */
 	private static final int HUD_X_LOCATION = 50;
 	/** Move counter y location, in pixels */
@@ -59,11 +61,11 @@ public class World {
 		}
 		
 		// Add and remove queued sprites
-		if (spritesToBirth != null) {
+		if (!spritesToBirth.isEmpty()) {
 			sprites.addAll(spritesToBirth);
 			spritesToBirth.clear();
 		}
-		if (spritesToDie != null) {
+		if (!spritesToDie.isEmpty()) {
 			sprites.removeAll(spritesToDie);
 			spritesToDie.clear();
 		}
@@ -129,11 +131,12 @@ public class World {
 			}
 		}
 		
-		// TODO Once it's moved, we check if we've met the target count
+		updateTargets();
 		return true;
 	}
 	
-	/* Gets the first sprite of specified type it encounters at location */
+	/* Gets the first sprite of specified type encountered at location */
+	// TODO Is it okay to just get the first one?
 	public Sprite getSpriteAt(Coordinate location, Class<?> type) {
 		
 		// Loop through sprites checking for sprite on coord
@@ -155,6 +158,8 @@ public class World {
 		spritesToBirth.add(Loader.addSprite(imageName, location, this));
 	}
 	
+	//TODO Create world.displayEffect
+	
 	public void reset() {
 		app.resetLvl();
 	}
@@ -171,24 +176,25 @@ public class World {
 					((Block) sprite).undo(moves);
 				}
 			}
+			updateTargets();
 		}
 	}
 	
-	public void addMove() {
+	public void addMove(boolean successful, Coordinate newLoc) {
 		
-		moves += 1;
-		int count = 0;
+		if (successful) {
+			moves += 1;
+		}
 		
-		// TODO Rogue and mage need to move whether player succeeds or not
+		// Tell rogue & mage to move regardless of whether move was successful
 		for (Sprite sprite : sprites) {
 			
 			if (sprite instanceof Rogue) {
 				// Tells rogue to patrol along x axis
-				// TODO Remove magic character
 				((Rogue) sprite).patrol();
 			} else if (sprite instanceof Mage) {
 				// Tells mage to track player
-				((Mage) sprite).trackingMove(getPlayerLocation());
+				((Mage) sprite).trackingMove(newLoc);
 			}
 		}
 	}
@@ -206,10 +212,15 @@ public class World {
 		// Update count and check if level won
 		targetCount = count;
 		if (targetCount >= targetsNeeded) {
-			app.nextLvl();
+			gameWon = true;
 		}
 	}
 	
+	public boolean won() {
+		boolean won = this.gameWon;
+		return won;
+	}
+
 	public int getMoves() {
 		int m = moves;
 		return m;
@@ -220,29 +231,17 @@ public class World {
 		/*  Link first door to the first switch down,
 		 *  second door to the second switch, etc
 		 */
-		for (Sprite sprite : sprites) {
-			if (sprite instanceof Door) {
-				for (Sprite sprite2 : sprites) {
-					if (sprite2 instanceof Switch) {
-						if (((Switch)sprite2).getDoor() == null) {
-							((Switch)sprite2).linkDoor((Door)sprite);
+		for (Sprite pDoor : sprites) {
+			if (pDoor instanceof Door) {
+				for (Sprite pSwitchPad : sprites) {
+					if (pSwitchPad instanceof Switch) {
+						if (((Switch)pSwitchPad).getDoor() == null) {
+							((Switch)pSwitchPad).linkDoor((Door)pDoor);
 							break;
 						}
 					}
 				}
 			}
 		}
-	}
-	
-	private Coordinate getPlayerLocation() {
-		
-		for (Sprite sprite : sprites) {
-			if (sprite instanceof Player) {
-				return sprite.getLocation();
-			}
-		}
-		// TODO Make this into a proper error.
-		System.out.println("Failed to find player location.");
-		return null;
 	}
 }

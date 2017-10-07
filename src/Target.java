@@ -7,18 +7,6 @@ public class Target extends PressurePad {
 	public Target(Coordinate coordinate) {
 		super(SOURCE, coordinate);
 	}
-	/*
-	@Override
-	public void activate() {
-		on = true;
-
-	}
-
-	@Override
-	public void deactivate() {
-		on = false;
-	}
-	*/
 	
 	@Override
 	public void toggle() {

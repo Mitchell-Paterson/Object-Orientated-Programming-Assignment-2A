@@ -13,6 +13,7 @@ public class Skeleton extends Enemy {
 	
 	public Skeleton(Coordinate coordinate, World world) {
 		super(SOURCE, coordinate, INITIAL_AXIS_DIRECTION, world);
+		// TODO Is this okay to have in constructor
 		Timer timer = new Timer();
 		timer.schedule(new PatrolTask(), PATROL_DELAY, PATROL_DELAY);
 	}
