@@ -1,11 +1,11 @@
 import org.newdawn.slick.Input;
 
-public class Player extends Reversable implements Mobile{
+public class Player extends Reversable {
 	
-	private static final String SOURCE = Loader.SOURCE_FILE + "player_left.png";
+	private static final String SOURCE = Loader.SOURCE_FOLDER + "player_left.png";
 	
-	public Player(Coordinate coordinate) {
-		super(SOURCE, coordinate);
+	public Player(Coordinate coordinate, World world) {
+		super(SOURCE, coordinate, world);
 	}
 	
 	/** Takes input and converts to a move order */
@@ -13,7 +13,7 @@ public class Player extends Reversable implements Mobile{
 	public void update(Input input) {
 		
 		boolean moved = false;
-		Coordinate prevLocation = super.getLocation();
+		Coordinate prevLocation = getLocation();
 		
 		if (input.isKeyPressed(Input.KEY_UP)) {
 			moved = move(-1, 'y');
@@ -28,31 +28,29 @@ public class Player extends Reversable implements Mobile{
 			moved = move(1, 'x');
 		}
 		
+		if (checkWorld().gotSprite(getLocation(), Enemy.class)) {
+			checkWorld().reset();
+		}
+		
 		if (moved) {
 			addPrev(prevLocation);
 		}
 		
+		
 	}
 	
 	@Override
-	public boolean move(int distance, char direction) {
-		
-		Coordinate temp = Mobile.calculateMove(distance, direction, super.getLocation());
-		
-		// We check it's okay to walk on and everything there can be pushed away
-		if (World.traversable(temp) && World.push(distance, direction, temp)) {
-			super.setLocation(temp);
-			World.addMove();
-			World.deadly(temp);
+	public boolean moveChecks(Coordinate newLoc, int distance, char direction) {
+		if (checkWorld().traversable(newLoc) 
+				&& checkWorld().push(distance, direction, newLoc.clone())) {
 			return true;
 		}
-	return false;
+		return false;
 	}
 	
 	@Override
-	public void undo() {
-		super.undo();
-		World.deadly(this.getLocation());
+	public void afterMove() {
+		checkWorld().addMove();
 	}
 	
 }

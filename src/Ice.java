@@ -1,63 +1,54 @@
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class Ice extends Block {
 	
-	private final static String SOURCE = Loader.SOURCE_FILE + "ice.png";
+	private final static String SOURCE = Loader.SOURCE_FOLDER + "ice.png";
 	/** Delay between movements in milliseconds */
 	private final static int SLIDE_DELAY = 250;
 	
-	public Ice(Coordinate coordinate) {
-		super(SOURCE, coordinate);
+	public Ice(Coordinate coordinate, World world) {
+		super(SOURCE, coordinate, world);
 	}
 	
 	@Override
 	public boolean move(int distance, char direction) {
+		// Use normal block move at first, to save position
 		if (super.move(distance, direction)) {
-			// TODO Clean this schedulor up somehow
-			final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-		    executorService.schedule(new Runnable() {
-		        @Override
-		        public void run() {
-		        	slide(distance, direction);
-		        }
-		    }, SLIDE_DELAY, TimeUnit.MILLISECONDS);
+			// Then start sliding
+		    slide(distance, direction);
 		    return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
-	public boolean slide(int distance, char direction) {
-		
-		if (slide_move(distance, direction)) {
-			final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-		    executorService.schedule(new Runnable() {
-		        @Override
-		        public void run() {
-		        	slide(distance, direction);
-		        }
-		    }, SLIDE_DELAY, TimeUnit.MILLISECONDS);
-		    return true;
-		} else {
-			return false;
-		}
+	public void slide(int distance, char direction) {
+	
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				// Keep sliding till blocked
+				if (!slide_move(distance, direction)) {
+					cancel();
+				}
+			}
+		};
+		timer.schedule(task, SLIDE_DELAY, SLIDE_DELAY);
 	}
 	
+	// Special move to use only while sliding, instead of normal move
 	public boolean slide_move(int distance, char direction) {
 		
-		Coordinate temp = Mobile.calculateMove(distance, direction, super.getLocation());
+		Coordinate temp = calculateMove(distance, direction, super.getLocation());
 		
-		// Check we can move there before moving
-		if (World.traversable(temp) && !World.hasBlock(temp)) {
-			
+		if(moveChecks(temp, distance, direction)) {
+			// beforeMove omitted, no move saving
 			super.setLocation(temp);
-			
-			updatePad();
-			
+			afterMove();
 			return true;
 		}
-	return false;
+		return false;
 	}
 }

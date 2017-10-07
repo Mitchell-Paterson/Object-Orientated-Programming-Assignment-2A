@@ -1,49 +1,27 @@
 import java.util.LinkedList;
 
 
-public class Block extends Reversable implements Mobile {
+public class Block extends Reversable {
 	
-	private boolean onPressurePad = false;
-	private PressurePad linkedPad = null;
+	/** Pressure pad the block is interacting with */
+	private PressurePad linkedPad;
+	/* Saves which move number a move was made on */
 	private LinkedList<Integer> moveIndex;
 	
-	public Block(String image_src, Coordinate coordinate) {
-		super(image_src, coordinate);
+	public Block(String image_src, Coordinate coordinate, World world) {
+		super(image_src, coordinate, world);
 		moveIndex = new LinkedList<Integer>();
 	}
 	
-	@Override
-	public boolean move(int distance, char direction) {
+	// TODO Not overriding, instead overloading, not sure if safe
+	public void undo(int moves) {
 		
-		Coordinate temp = Mobile.calculateMove(distance, direction, super.getLocation());
-		
-		// Check we can move there before moving
-		if (World.traversable(temp) && !World.hasBlock(temp)) {
-			
-			addPrev(this.getLocation());
-			moveIndex.add(World.getMoves());
-			
-			super.setLocation(temp);
-			
-			updatePad();
-			
-			return true;
-		}
-	return false;
-	}
-	
-	@Override
-	public void reset() {
-		super.reset();
-		moveIndex.clear();
-	}
-	
-	@Override
-	public void undo() {
-		
-		if (moveIndex.size() > 0) {
-			if (moveIndex.getLast() == World.getMoves()) {
+		// Check we have move history
+		if (!moveIndex.isEmpty()) {
+			// Check we are at the current point in move history
+			if (moveIndex.getLast() == moves) {
 				moveIndex.removeLast();
+				// Undo latest move
 				super.undo();
 				updatePad();
 			}
@@ -53,17 +31,35 @@ public class Block extends Reversable implements Mobile {
 	
 	public void updatePad() {
 		
-		// Will need to catch null error
-		if (onPressurePad) {
-			onPressurePad = false;
-			linkedPad.deactivate();
+		// Leave current PressurePad
+		if (linkedPad != null) {
+			linkedPad.toggle();
 			linkedPad = null;
 		}
-		if (World.hasPressurePad(super.getLocation())){
-			onPressurePad = true;
-			linkedPad = World.linkPad(super.getLocation());
-			linkedPad.activate();
+		
+		// Check if block has new pad now
+		linkedPad = (PressurePad)
+				checkWorld().getSpriteAt(getLocation(), PressurePad.class);
+		
+		// If new pad, activate it
+		if (linkedPad != null) {
+			linkedPad.toggle();
 		}
+		
+		// Tell world to update it's target count
+		checkWorld().updateTargets();
+	}
+	
+	@Override
+	public void beforeMove() {
+		// Add move history
+		addPrev(getLocation());
+		moveIndex.add(checkWorld().getMoves());
+	}
+	
+	@Override
+	public void afterMove() {
+		updatePad();
 	}
 
 }

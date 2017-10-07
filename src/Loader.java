@@ -4,14 +4,15 @@ import java.util.*;
 
 public class Loader {
 	
-	public final static String SOURCE_FILE = "res/";
+	public final static String SOURCE_FOLDER = "res/";
+	public final static String LEVEL_FOLDER = "levels/";
 	
 	/**
 	 * Loads the sprites from a given level file.
 	 * @param filename
 	 * @return
 	 */
-	public static List<Sprite> loadSprites(String filename) {
+	public static List<Sprite> loadSprites(String filename, World world) {
 		
 		/**line from .lvl file */
 		String line;
@@ -34,7 +35,7 @@ public class Loader {
 				String imageName = parser.image(line);
 				
 				// Decide which image to load
-				sprites.add(addSprite(imageName, coords));
+				sprites.add(addSprite(imageName, coords, world));
 						
 			}
 			
@@ -47,7 +48,7 @@ public class Loader {
 	
 	
 	/** Adds new sprite from data */
-	public static Sprite addSprite(String imageName, Coordinate coords) {
+	public static Sprite addSprite(String imageName, Coordinate coords, World world) {
 		
 		// Decide which sprite to load
 		switch (imageName) {
@@ -59,25 +60,25 @@ public class Loader {
 				return new Wall(coords);
 			
 			case "stone":
-				return new Stone(coords);
+				return new Stone(coords, world);
 			
 			case "target":
 				return new Target(coords);
 			
 			case "player":
-				return new Player(coords);
+				return new Player(coords, world);
 			
 			case "tnt":
-				return new TNT(coords);
+				return new TNT(coords, world);
 				
 			case "cracked":
 				return new CrackedWall(coords);
 			
 			case "explosion":
-				return new Explosion(coords);
+				return new Explosion(coords, world);
 				
 			case "ice":
-				return new Ice(coords);
+				return new Ice(coords, world);
 				
 			case "door":
 				return new Door(coords);
@@ -86,13 +87,13 @@ public class Loader {
 				return new Switch(coords);
 				
 			case "rogue":
-				return new Rogue(coords);
+				return new Rogue(coords, world);
 			
 			case "skeleton":
-				return new Skeleton(coords);
+				return new Skeleton(coords, world);
 			
 			case "mage":
-				return new Mage(coords);
+				return new Mage(coords, world);
 			
 			// If we can't find what sprite to load
 			default:

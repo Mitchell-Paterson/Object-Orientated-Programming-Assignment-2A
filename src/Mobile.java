@@ -5,9 +5,10 @@ public interface Mobile {
 	 * @param distance
 	 * @param direction
 	 */
-	public boolean move(int distance, char direction);
 	
-	public static Coordinate calculateMove(int distance, char direction, Coordinate temp) {
+	public static Coordinate calculateMove(int distance, char direction, Coordinate location) {
+		
+		Coordinate temp = location.clone();
 		
 		float realDist = distance * App.TILE_SIZE;
 		
