@@ -13,7 +13,7 @@
 
  - Push is now in world and requires distance, direction and location.
 
- - Blocks can no longer push other blocks
+ - Blocks can no longer push other blocks (this just caused to much chaos)
 
  - Player and block now have overrides of move, instead of the Pusher interface
 
@@ -32,3 +32,7 @@
  - Rogue has override of move, so it can push blocks as well
  - Skeleton `void wander()` is exactly as planned
  - Mage `void trackingMove()` is pretty much as planned
+
+Huge change: Everything is no longer static. A pointer to world is now passed down. And world recieves a pointer to App as well, but that can't be accessed by anything other than inside that world.
+
+- Activate and Deactivate change to just toggle.

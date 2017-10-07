@@ -1,0 +1,28 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{Assignment 2B Notes}
+\author{Mitchell Paterson 842069 }
+\date{October 2017}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+Many, many changes were made to the original plan. My plan was done entirely before any coding took place, so this was to be expected. Despite this, I think I benefited from having made a plan, as it gave me a place to start and something to think about in terms of how everything was going to work whilst I was coding it, which gave me a lot of foresight into how to do things. And there was still quite a bit that stayed the same in the end - the general structure has not changed hugely. So without any further ado, here's some changes to the plan I made.
+
+\section{Making World Static Was A Bad Idea}
+In order for sprites to access word, I simply made all the attributes and methods in world static, as I wasn't sure how else to do it at first. Whilst this is okay in some sense, because there is only ever one world at a time in this implementation, it could potentially cause issues with some variables remaining from previous worlds and affecting the game unpredictably. 
+\subsection{And How I Fixed It}This was fixed by passing a pointer to world down to sprites(that needed it) and ensuring world was well protected in terms of getters and setters, so sprites couldn't just access all of world.
+
+\section{Didn't Need Those Interfaces}
+Movable and Reversable didn't need to be interfaces. In fact, they were much better as superclasses, as they allowed me to store attributes that would be needed (e.g. move history for Reversables). This also allowed me to store methods without resulting to using default methods, which cannot reference anything too specific about the object they are being used in - e.g. the location of a sprite.
+
+\section{The Breakup of the Move Method}
+The method move(int distance, char direction) was originally written as just one big method that was overridden every time a sprite needed to use it differently (and often calls super.move). This was bad, as there was so much copy pasting going around.
+\subsection{Calculate Move}
+The (originally static) method calculateMove was the first method implemented to break down the move method. This was something every move has - it simply would take the distance and direction then return a map coordinate indicating where the sprite would go from that move. This saved some retyping of the same maths.
+\subsection{The Three Way}
+Next, and much later implemented, was the three methods checkMove, beforeMove and afterMove. The move method in Movable now simply called four methods in a structured way. Most sprites only had to Override one of these, so code copying was minimised.
+\end{document}
