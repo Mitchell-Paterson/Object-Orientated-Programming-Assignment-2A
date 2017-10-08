@@ -158,8 +158,6 @@ public class World {
 		spritesToBirth.add(Loader.addSprite(imageName, location, this));
 	}
 	
-	//TODO Create world.displayEffect
-	
 	public void reset() {
 		app.resetLvl();
 	}

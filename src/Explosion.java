@@ -1,7 +1,5 @@
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Explosion extends Sprite {
 
@@ -12,14 +10,15 @@ public class Explosion extends Sprite {
 	public Explosion(Coordinate coordinate, World world) {
 		super(SOURCE, coordinate);
 		this.world = world;
-		final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-	    executorService.schedule(new Runnable() {
-	        @Override
-	        public void run() {
-	        	dissapate();
-	        }
-	    }, EXIST_TIME, TimeUnit.MILLISECONDS);
-		
+		// TODO How do we clean up timers?
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+			@Override
+			public void run() {
+				dissapate();
+			}
+		};
+		timer.schedule(task, EXIST_TIME);
 	}
 	
 	private void dissapate() {
