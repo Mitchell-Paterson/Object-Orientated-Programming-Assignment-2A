@@ -1,7 +1,7 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 
-\title{Assignment 2B Notes}
+\title{Assignment 2B Reflection}
 \author{Mitchell Paterson 842069 }
 \date{October 2017}
 
@@ -17,12 +17,30 @@ In order for sprites to access word, I simply made all the attributes and method
 \subsection{And How I Fixed It}This was fixed by passing a pointer to world down to sprites(that needed it) and ensuring world was well protected in terms of getters and setters, so sprites couldn't just access all of world.
 
 \section{Didn't Need Those Interfaces}
-Movable and Reversable didn't need to be interfaces. In fact, they were much better as superclasses, as they allowed me to store attributes that would be needed (e.g. move history for Reversables). This also allowed me to store methods without resulting to using default methods, which cannot reference anything too specific about the object they are being used in - e.g. the location of a sprite.
+Movable and Reversible didn't need to be interfaces. In fact, they were much better as superclasses, as they allowed me to store attributes that would be needed (e.g. move history for Reversables). This also allowed me to store methods without resulting to using default methods, which cannot reference anything too specific about the object they are being used in - e.g. the location of a sprite.
 
 \section{The Breakup of the Move Method}
 The method move(int distance, char direction) was originally written as just one big method that was overridden every time a sprite needed to use it differently (and often calls super.move). This was bad, as there was so much copy pasting going around.
 \subsection{Calculate Move}
-The (originally static) method calculateMove was the first method implemented to break down the move method. This was something every move has - it simply would take the distance and direction then return a map coordinate indicating where the sprite would go from that move. This saved some retyping of the same maths.
+The method calculateMove was the first method implemented to break down the move method. This was something every move has - it simply would take the distance and direction then return a map coordinate indicating where the sprite would go from that move. This saved some retyping of the same maths.
 \subsection{The Three Way}
-Next, and much later implemented, was the three methods checkMove, beforeMove and afterMove. The move method in Movable now simply called four methods in a structured way. Most sprites only had to Override one of these, so code copying was minimised.
+Next, and much later implemented, were the three methods checkMove, beforeMove and afterMove. The move method in Movable now simply called four methods in a structured way. Most sprites only had to Override one of these, so code copying was minimised - by breaking the method up into smaller parts.
+
+\section{Blocks Don't Push Other Blocks}
+Whilst I originally had blocks pushing other blocks, I soon found out how complicated I was making this for myself. I thought it would be just as complicated doing it the other way around, but this was not the case. This was essentially because of ice blocks - ice blocks \textit{needed} to be blocked by other blocks, and so the path of least resistance would be to have both act the same, given ice inherits from block. In programming, the best code you have is often the code you didn't write - it doesn't need to be maintained, read over, copied, understood, debugged, or written in the first place.
+
+\section{And the Rest}
+Some other changes:
+\subsection{Traversable}
+Instead of recognising what is traversable by looking at the types of blocks on it (e.g is it a wall?), we now look at a boolean stored in all tiles - this allows the traversability of a tile to be changed. This is great for doors, as you can just change how you render them and their traversability, in order to open and close them.
+\subsection{Checking and Getting Sprites}
+Originally, there was no real plan for getting sprites from world when needed by another sprite, world would simply be the only one accessing them. In practice, sprites did need access to the world to check things like: Is there a block there? Can I push it? Returning booleans that answer these questions are safe in terms of privacy, but it's not great to have methods hasBlock and hasEnemy when they are so similar. I combined these together to make gotSprite(Coordinate location, Class<?> type), which will return a true boolean if it finds the sprite you enter.
+
+\section{Summary}
+\begin{itemize}
+    \item Generally, my project 2A was not fleshed out entirely, so many methods and attributes were added, but it's also worth mentioning interfaces were dropped entirely.
+    \item I had a lot of difficulty ensuring that the World class maintained it's privacy.
+    \item I learnt a lot about what making something private \textit{really} is and how to keep things appropriate to their class.
+    \item If I redid this, I would make everything more modular from the start - allowing for less copying of code and more portable code. Given that I now know better how to make something modular for inherited classes.
+\end{itemize}
 \end{document}
