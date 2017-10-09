@@ -12,28 +12,20 @@ public class Player extends Reversable {
 	@Override
 	public void update(Input input) {
 		
-		boolean moved = false;
-		Coordinate prevLocation = getLocation();
-		
 		if (input.isKeyPressed(Input.KEY_UP)) {
-			moved = move(-1, 'y');
+			move(-1, 'y');
 		}
 		if (input.isKeyPressed(Input.KEY_DOWN)) {
-			moved = move(1, 'y');
+			move(1, 'y');
 		}
 		if (input.isKeyPressed(Input.KEY_LEFT)) {
-			moved = move(-1, 'x');
+			move(-1, 'x');
 		}
 		if (input.isKeyPressed(Input.KEY_RIGHT)) {
-			moved = move(1, 'x');
+			move(1, 'x');
 		}
-		
 		if (checkWorld().gotSprite(getLocation(), Enemy.class)) {
 			checkWorld().reset();
-		}
-		
-		if (moved) {
-			addPrev(prevLocation);
 		}
 	}
 	
@@ -47,5 +39,10 @@ public class Player extends Reversable {
 		}
 		checkWorld().addMove(false, newLoc);
 		return false;
+	}
+	
+	@Override
+	public void beforeMove() {
+		addPrev(getLocation());
 	}
 }
