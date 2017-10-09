@@ -167,18 +167,15 @@ public class World {
 		if (moves > 0) {
 			moves -= 1;
 			for (Sprite sprite : sprites) {
-				if (sprite instanceof Player) {
-					((Player) sprite).undo();
-				}
-				else if (sprite instanceof Block) {
-					((Block) sprite).undo(moves);
+				if (sprite instanceof Reversable) {
+					((Reversable) sprite).undo(moves);
 				}
 			}
 			updateTargets();
 		}
 	}
 	
-	public void addMove(boolean successful, Coordinate newLoc) {
+	public void addPlayerMove(boolean successful, Coordinate newLoc) {
 		
 		if (successful) {
 			moves += 1;
@@ -189,7 +186,7 @@ public class World {
 			
 			if (sprite instanceof Rogue) {
 				// Tells rogue to patrol along x axis
-				((Rogue) sprite).patrol();
+				((Rogue) sprite).patrol(Rogue.PATROL_AXIS);
 			} else if (sprite instanceof Mage) {
 				// Tells mage to track player
 				((Mage) sprite).trackingMove(newLoc);
@@ -197,6 +194,7 @@ public class World {
 		}
 	}
 	
+	// TODO Should this be in update?
 	public void updateTargets() {
 		
 		// Count targets that have a block
@@ -218,13 +216,14 @@ public class World {
 		boolean won = this.gameWon;
 		return won;
 	}
-
+	
 	public int getMoves() {
 		int m = moves;
 		return m;
 	}
 	
-	public void linkDoors() {
+	
+	private void linkDoors() {
 		
 		/*  Link first door to the first switch down,
 		 *  second door to the second switch, etc

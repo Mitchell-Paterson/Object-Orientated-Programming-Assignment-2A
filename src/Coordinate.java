@@ -46,6 +46,7 @@ public class Coordinate {
 		return copy;
 	}
 	
+	/** Allows us to copy details of other Coord onto ours */
 	public void set(Coordinate coord){
 		this.x = coord.getX();
 		this.y = coord.getY();

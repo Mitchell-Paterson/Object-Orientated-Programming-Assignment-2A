@@ -1,4 +1,7 @@
 /**
+ * Assignment 2B Submission for SWEN20003: Object Orientated Software Development 2017
+ * by Mitchell Paterson
+ * 
  * Project skeleton for SWEN20003: Object Oriented Software Development 2017
  * by Eleanor McMurtry
  */

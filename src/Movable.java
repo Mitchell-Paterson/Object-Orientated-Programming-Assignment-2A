@@ -1,5 +1,7 @@
-public class Movable extends Sprite {
+//TODO 
+public abstract class Movable extends Sprite {
 	
+	/** Pointer to world the Movable is stored in */
 	private World world;
 	
 	public Movable(String image_src, Coordinate coordinate, World world) {
@@ -7,41 +9,48 @@ public class Movable extends Sprite {
 		this.world = world;
 	}
 	
+	/** Access world */
 	public World checkWorld() {
 		return world;
 	}
 	
-
+	/** Main move method 
+	 * @param distance Distance to move, use negative to go backwards.
+	 * @param direction The axis along which we move
+	 * @return Returns boolean, indicating whether the move was successful or not.
+	 */
 	public boolean move(int distance, char direction) {
 		
 		Coordinate newLoc = calculateMove(distance, direction);
 		
 		if(moveChecks(newLoc, distance, direction)) {
 			beforeMove();
-			super.setLocation(newLoc);
+			// TODO Does stuff like this need a reference to super?
+			setLocation(newLoc);
 			afterMove();
+			// Move succeeded
 			return true;
 		}
+		// Move failed
 		return false;
 	}
 	
 	public boolean moveChecks(Coordinate newLoc, int distance, char direction) {
-		if (checkWorld().traversable(newLoc) && !checkWorld().gotSprite(newLoc, Block.class)) {
-			return true;
-		}
-		return false;
+		return (world.traversable(newLoc) && !world.gotSprite(newLoc, Block.class));
 	}
 	
 	// Empty by default
-	public void beforeMove() {
-		
-	}
+	// TODO This "semi-abstract" thing... is it okay?
+	public void beforeMove() {}
 	
 	// Empty by default
-	public void afterMove() {
-		
-	}
+	public void afterMove() {}
 	
+	/* Calculates where the sprite will be from the move
+	 * @param distance Distance to move, use negative to go backwards.
+	 * @param direction The axis along which we move
+	 * @return Location of sprite after move
+	 */
 	public Coordinate calculateMove(int distance, char direction) {
 		
 		Coordinate temp = getLocation();

@@ -10,7 +10,7 @@ public class Loader {
 	/**
 	 * Loads the sprites from a given level file.
 	 * @param filename
-	 * @return
+	 * @return List of constructed sprites in the file
 	 */
 	public static List<Sprite> loadSprites(String filename, World world) {
 		
@@ -47,7 +47,13 @@ public class Loader {
 	}
 	
 	
-	/** Adds new sprite from data */
+	/** Adds new sprite from data
+	 * 
+	 * @param imageName Name of sprite to load.
+	 * @param coords Where to put the sprite at.
+	 * @param world World sprite will exist in.
+	 * @return Returns a newly constructed sprite.
+	 */
 	public static Sprite addSprite(String imageName, Coordinate coords, World world) {
 		
 		// Decide which sprite to load
@@ -96,6 +102,7 @@ public class Loader {
 				return new Mage(coords, world);
 			
 			// If we can't find what sprite to load
+			// TODO Should I make this an error?
 			default:
 				System.out.format("Couldn't find %s.\n", imageName);
 				return null;

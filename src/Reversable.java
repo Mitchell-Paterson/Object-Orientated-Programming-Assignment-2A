@@ -1,6 +1,7 @@
 import java.util.LinkedList;
 
-public class Reversable extends Movable {
+//TODO Okay if abstract?
+public abstract class Reversable extends Movable {
 
 	private LinkedList<Coordinate> prevLocations;
 	
@@ -9,7 +10,7 @@ public class Reversable extends Movable {
 		prevLocations = new LinkedList<Coordinate>();
 	}
 	
-	public void undo() {
+	public void undo(int moves) {
 		if (prevLocations.size() > 0) {
 			Coordinate prevLoc = prevLocations.pollLast();
 			super.setLocation(prevLoc);

@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 
-
-public class Block extends Reversable {
+// TODO Okay if abstract?z
+public abstract class Block extends Reversable {
 	
 	/** Pressure pad the block is interacting with */
 	private PressurePad linkedPad;
@@ -13,7 +13,7 @@ public class Block extends Reversable {
 		moveIndex = new LinkedList<Integer>();
 	}
 	
-	// TODO Not overriding, instead overloading, not sure if safe
+	@Override
 	public void undo(int moves) {
 		
 		// Check we have move history
@@ -22,13 +22,13 @@ public class Block extends Reversable {
 			if (moveIndex.getLast() == moves) {
 				moveIndex.removeLast();
 				// Undo latest move
-				super.undo();
+				super.undo(moves);
 				updatePad();
 			}
 		}
 	}
 	
-	
+	// TODO Should I make this into update(input)?
 	public void updatePad() {
 		
 		// Leave current PressurePad

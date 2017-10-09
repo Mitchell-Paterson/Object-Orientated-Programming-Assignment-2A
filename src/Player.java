@@ -24,6 +24,9 @@ public class Player extends Reversable {
 		if (input.isKeyPressed(Input.KEY_RIGHT)) {
 			move(1, 'x');
 		}
+		
+		// Reset world if standing in same location as enemy
+		// TODO Should I put in world?
 		if (checkWorld().gotSprite(getLocation(), Enemy.class)) {
 			checkWorld().reset();
 		}
@@ -34,10 +37,10 @@ public class Player extends Reversable {
 		
 		if (checkWorld().traversable(newLoc) 
 				&& checkWorld().push(distance, direction, newLoc.clone())) {
-			checkWorld().addMove(true, newLoc);
+			checkWorld().addPlayerMove(true, newLoc);
 			return true;
 		}
-		checkWorld().addMove(false, newLoc);
+		checkWorld().addPlayerMove(false, newLoc);
 		return false;
 	}
 	
