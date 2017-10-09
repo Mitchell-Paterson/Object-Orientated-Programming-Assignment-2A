@@ -120,7 +120,12 @@ public class World {
 		// Default to doesn't contain sprite
 		return false;
 	}
-	
+	/** Pushes a block
+	 * @param distance Distance to push block (negative to go backwards on axis)
+	 * @param direction Axis to push block along
+	 * @param location Location to push blocks at
+	 * @return True if push succeeds, false if a block can't move
+	 */
 	public boolean push(int distance, char direction, Coordinate location) {
 		
 		for (Sprite sprite : sprites) {

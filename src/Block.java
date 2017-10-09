@@ -29,6 +29,7 @@ public abstract class Block extends Reversable {
 	}
 	
 	// TODO Should I make this into update(input)?
+	// TODO Perhaps combine with World updateTargets
 	public void updatePad() {
 		
 		// Leave current PressurePad
