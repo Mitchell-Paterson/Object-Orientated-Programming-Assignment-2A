@@ -8,9 +8,10 @@ public class TNT extends Block {
 		super(SOURCE, coordinate, world);
 	}
 	
-	/** Move method now checks if we need to explode on new location */
+	/** Checks if we need to explode on new location */
 	@Override
 	public void afterMove() {
+		
 		// For now, it's only ever possible for cracked wall to be below
 		// TODO This can be improved, just check one step ahead of it's move
 		Coordinate below  = super.getLocation();
