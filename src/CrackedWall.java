@@ -7,5 +7,7 @@ public class CrackedWall extends Tile {
 	public CrackedWall(Coordinate coordinate) {
 		super(SOURCE, coordinate, TRAVERSABLE);
 	}
-
+	
+	// Nothing to see here, move along.
+	
 }
