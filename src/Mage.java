@@ -3,11 +3,9 @@ import java.lang.Math;
 public class Mage extends Enemy {
 	
 	private final static String SOURCE = Loader.SOURCE_FOLDER + "mage.png";
-	/** Unused for Mage, as she decides the direction to go */
-	private final static int INITIAL_AXIS_DIRECTION = -1;
 	
 	public Mage(Coordinate coordinate, World world) {
-		super(SOURCE, coordinate, INITIAL_AXIS_DIRECTION, world);
+		super(SOURCE, coordinate, world);
 	}
 	
 	public void trackingMove(Coordinate playerLoc) {

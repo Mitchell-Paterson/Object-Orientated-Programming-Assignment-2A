@@ -3,9 +3,12 @@ import java.io.BufferedReader;
 import java.util.*;
 
 public class Loader {
-	
+	 
+	/** Resources source folder */
 	public final static String SOURCE_FOLDER = "res/";
-	public final static String LEVEL_FOLDER = "levels/";
+	/** Resources source folder */
+	public final static String RESOURCES_FOLDER = "res/";
+
 	
 	/**
 	 * Loads the sprites from a given level file.

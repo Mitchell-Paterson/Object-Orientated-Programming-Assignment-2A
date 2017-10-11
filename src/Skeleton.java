@@ -1,7 +1,7 @@
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Skeleton extends Enemy {
+public class Skeleton extends Patroller {
 	
 	private final static String SOURCE = Loader.SOURCE_FOLDER + "skull.png";
 	/** Delay between moves in milliseconds */
@@ -12,7 +12,7 @@ public class Skeleton extends Enemy {
 	private final static char PATROL_AXIS = 'y';
 	
 	public Skeleton(Coordinate coordinate, World world) {
-		super(SOURCE, coordinate, INITIAL_AXIS_DIRECTION, world);
+		super(SOURCE, coordinate, INITIAL_AXIS_DIRECTION, PATROL_AXIS, world);
 		// TODO Is this okay to have in constructor
 		Timer timer = new Timer();
 		timer.schedule(new PatrolTask(), PATROL_DELAY, PATROL_DELAY);
@@ -21,7 +21,7 @@ public class Skeleton extends Enemy {
 	class PatrolTask extends TimerTask {
 		@Override
 		public void run() {
-			patrol(PATROL_AXIS);
+			patrol();
 		}
 	}
 }

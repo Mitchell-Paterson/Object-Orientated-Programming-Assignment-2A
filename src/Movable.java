@@ -1,4 +1,4 @@
-//TODO 
+
 public abstract class Movable extends Sprite {
 	
 	/** Pointer to world the Movable is stored in */
@@ -9,7 +9,7 @@ public abstract class Movable extends Sprite {
 		this.world = world;
 	}
 	
-	/** Access world */
+	/** Access link to world */
 	public World checkWorld() {
 		return world;
 	}
@@ -35,6 +35,12 @@ public abstract class Movable extends Sprite {
 		return false;
 	}
 	
+	/** Checks to take before moving. Has default implementation in Movable.
+	 * @param newLoc New location to check
+	 * @param distance How far we are moving
+	 * @param direction Axis we are moving along
+	 * @return If the move can happen or not
+	 */
 	public boolean moveChecks(Coordinate newLoc, int distance, char direction) {
 		return (world.traversable(newLoc) && !world.gotSprite(newLoc, Block.class));
 	}
@@ -46,7 +52,7 @@ public abstract class Movable extends Sprite {
 	// Empty by default
 	public void afterMove() {}
 	
-	/* Calculates where the sprite will be from the move
+	/** Calculates where the sprite will be from the move
 	 * @param distance Distance to move, use negative to go backwards.
 	 * @param direction The axis along which we move
 	 * @return Location of sprite after move

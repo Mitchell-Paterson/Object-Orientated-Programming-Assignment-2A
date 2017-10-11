@@ -29,9 +29,14 @@ public class App extends BasicGame
     public static final int TILE_SIZE = 32;
     /** number of levels in game */
     public static final int LEVELS = 6;
+    /** Current Level */
+    private int level = 3;
+    private final static String LEVEL_FOLDER = Loader.RESOURCES_FOLDER + "levels/";
+    private final static String LEVEL_FILE_TYPE = ".lvl";
+    private String levelSource = LEVEL_FOLDER + level + LEVEL_FILE_TYPE;
     
     private World world;
-    private int level = 1;
+
     public App()
     {    	
         super("Shadow Blocks");
@@ -41,18 +46,19 @@ public class App extends BasicGame
     public void init(GameContainer gc)
     throws SlickException
     {
-    	world = new World(level, this);
+    	world = new World(levelSource, this);
     }
     
     public void nextLvl() {
     	level += 1;
     	if (level < LEVELS) {
-    		world = new World(level, this);
+    		levelSource = LEVEL_FOLDER + level + LEVEL_FILE_TYPE;
+    		world = new World(levelSource, this);
     	}
     }
     
     public void resetLvl() {
-    	world = new World(level, this);
+    	world = new World(levelSource, this);
     }
 
     /** Update the game state for a frame.
